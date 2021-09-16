@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorPagina.dart';
+import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
 import 'package:provider/provider.dart';
 
 class TelaBase extends StatelessWidget {
@@ -23,12 +24,7 @@ class TelaBase extends StatelessWidget {
               title: const Text("Início"),
             ),
           ),
-          Scaffold(
-            drawer: DrawerCustomizado(),
-            appBar: AppBar(
-              title: const Text("Produtos"),
-            ),
-          ),
+          TelaProdutos(),
           Scaffold(
             drawer: DrawerCustomizado(),
             appBar: AppBar(
