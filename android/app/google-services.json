@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "406212837718",
+    "project_id": "loja-virtual-d6d7a",
+    "storage_bucket": "loja-virtual-d6d7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406212837718:android:d190ec877f74250b0e96f7",
+        "android_client_info": {
+          "package_name": "br.com.cristovaosilva.loja_virtual"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406212837718-grjmjgh4l8p5f3cedufmlc20q5o73t2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd4mMT3E5fP6-XPrH3sHbTkFO2tWG4Wys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406212837718-grjmjgh4l8p5f3cedufmlc20q5o73t2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
