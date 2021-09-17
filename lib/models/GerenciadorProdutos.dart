@@ -10,16 +10,43 @@ class GerenciadorProdutos extends ChangeNotifier {
   List<Produto> todosProdutos = [];
   bool carregando = false;
 
+  String _pesquisa = '';
+
+  String get pesquisa => _pesquisa;
+  set pesquisa(String value) {
+    _pesquisa = value;
+    notifyListeners();
+  }
+
+  List<Produto> get filteredProducts {
+    final List<Produto> filteredProducts = [];
+
+    if (pesquisa.isEmpty) {
+      //Casa a pesquisa esteja vazia, mostre todos os produtos:
+      filteredProducts.addAll(todosProdutos);
+    } else {
+      print("---------" + pesquisa);
+      filteredProducts.addAll(todosProdutos
+          .where((p) => p.nome.toLowerCase().contains(pesquisa.toLowerCase())));
+    }
+    return filteredProducts;
+  }
+
   GerenciadorProdutos() {
     _carregarTodosProdutos();
   }
 
   Future<void> _carregarTodosProdutos() async {
-    final QuerySnapshot snapProducts =
-        await bancoDados.collection("produtos").get();
+    try {
+      final QuerySnapshot snapProducts =
+          await bancoDados.collection("produtos").get();
 
-    todosProdutos = snapProducts.docs.map(
-      (d) => Produto.fromDocumentSnapshot(d)).toList();
+      todosProdutos = snapProducts.docs
+          .map((d) => Produto.fromDocumentSnapshot(d))
+          .toList();
+    } catch (erro) {
+      //todosProdutos = [];
+    }
 
     notifyListeners();
   }
