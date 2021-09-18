@@ -34,6 +34,7 @@ dependencies:
   firebase_storage: ^10.0.3 #Armazenamento de imagens
   provider: ^6.0.0 #monitorar mudanças em algumas variáveis
   validadores: ^1.0.5 #validar campos
+  carousel_pro: ^1.0.0 #adicionar carrossel nas imagens
 
 dev_dependencies:
   flutter_test:

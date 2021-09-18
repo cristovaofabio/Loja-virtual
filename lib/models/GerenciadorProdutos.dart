@@ -25,7 +25,6 @@ class GerenciadorProdutos extends ChangeNotifier {
       //Casa a pesquisa esteja vazia, mostre todos os produtos:
       filteredProducts.addAll(todosProdutos);
     } else {
-      print("---------" + pesquisa);
       filteredProducts.addAll(todosProdutos
           .where((p) => p.nome.toLowerCase().contains(pesquisa.toLowerCase())));
     }
