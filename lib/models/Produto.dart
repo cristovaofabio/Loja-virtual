@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 
-class Produto {
+class Produto  extends ChangeNotifier {
   late String id;
   late String nome;
   late String descricao;
@@ -9,6 +10,26 @@ class Produto {
   late List<TamanhoItem> tamanhos;
 
   Produto();
+
+  TamanhoItem _tamanhoSelecionado = TamanhoItem();
+
+  TamanhoItem get tamanhoSelecionado => _tamanhoSelecionado;
+  set tamanhoSelecionado(TamanhoItem value){
+    _tamanhoSelecionado = value;
+    notifyListeners();
+  }
+
+  int get totalEstoque {
+    int estoque = 0;
+    for(final tamanho in tamanhos){
+      estoque += tamanho.estoque!;
+    }
+    return estoque;
+  }
+
+  bool get temEstoque {
+    return totalEstoque > 0;
+  }
 
   Produto.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     this.id = documentSnapshot.id;

@@ -4,6 +4,8 @@ class TamanhoItem {
   num? preco;
   int? estoque;
 
+  TamanhoItem();
+
   TamanhoItem.fromMap(Map<String, dynamic> map){
     this.nome = map['nome'] as String;
     this.preco = map['preco'] as num;
