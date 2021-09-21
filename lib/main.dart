@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
+import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
 import 'package:loja_virtual/telas/produtos/TelaProduto.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +37,13 @@ void main() async {
           create: (_) => GerenciadorProdutos(),
           lazy: false,
         ),
+        //Sempre que o ítem 1 sofrer alguma modificação, o ítem 2 é altualizado:
+        ProxyProvider<GerenciadorUsuarios, GerenciadorCarrinho>(
+          create: (_) => GerenciadorCarrinho(),
+          lazy: false,
+          update: (_, gerenciadorUsuario, gerenciadorCarrinho) =>
+              gerenciadorCarrinho!..atualizarUsuario(gerenciadorUsuario),
+        ),
       ],
       child: MaterialApp(
         theme: temaPadrao,
@@ -53,6 +62,10 @@ void main() async {
             case '/produto':
               return MaterialPageRoute(
                 builder: (_) => TelaProduto(settings.arguments as Produto),
+              );
+            case '/carrinho':
+              return MaterialPageRoute(
+                builder: (_) => TelaCarrinho(),
               );
             case '/login':
               return MaterialPageRoute(

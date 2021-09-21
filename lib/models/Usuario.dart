@@ -6,9 +6,11 @@ class Usuario {
   late String email;
   late String senha;
 
+  FirebaseFirestore bancoDados = FirebaseFirestore.instance;
+
   Usuario();
 
-  Usuario.fromDocumentSnapshot(DocumentSnapshot documentSnapshot){
+  Usuario.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     this.idUsuario = documentSnapshot.id;
     this.nome = documentSnapshot["nome"];
     this.email = documentSnapshot["email"];
@@ -22,11 +24,16 @@ class Usuario {
     return map;
   }
 
+  CollectionReference get carrinhoReference => 
+    bancoDados
+      .collection("usuarios")
+      .doc(this.idUsuario)
+      .collection('carrinho');
+
   Future<void> salvarDados() async {
-    FirebaseFirestore bancoDados = FirebaseFirestore.instance;
     await bancoDados
-            .collection("usuarios")
-            .doc(this.idUsuario)
-            .set(toMap());
+      .collection("usuarios")
+      .doc(this.idUsuario)
+      .set(toMap());
   }
 }

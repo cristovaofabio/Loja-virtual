@@ -31,6 +31,18 @@ class Produto  extends ChangeNotifier {
     return totalEstoque > 0;
   }
 
+  TamanhoItem encontrarTamanho(String nome){
+    try {
+      return tamanhos.firstWhere((s) => s.nome == nome);
+    } catch (e){
+      TamanhoItem tamanhoItem = TamanhoItem();
+      tamanhoItem.nome="";
+      tamanhoItem.preco = 0;
+      tamanhoItem.estoque = 0;
+      return tamanhoItem;
+    }
+  }
+
   Produto.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     this.id = documentSnapshot.id;
     this.nome = documentSnapshot["nome"];

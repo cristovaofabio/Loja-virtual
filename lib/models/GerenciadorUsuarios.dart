@@ -10,7 +10,7 @@ class GerenciadorUsuarios extends ChangeNotifier {
 
   bool carregando = false;
 
-  late Usuario usuarioAtual;
+  Usuario usuarioAtual = Usuario();
 
   GerenciadorUsuarios() {
     _carregarUsuarioAtual();

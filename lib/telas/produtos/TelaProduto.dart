@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/main.dart';
+import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/telas/produtos/componentes/TamanhoWidget.dart';
@@ -113,6 +114,8 @@ class TelaProduto extends StatelessWidget {
                               if(nomeUsuario.isNotEmpty){
                                 //Usuário logado e tamanho selecionado
                                 //Adicionar ao carrinho
+                                context.read<GerenciadorCarrinho>().adicionarAoCarrinho(produto);
+                                Navigator.of(context).pushNamed('/carrinho');
                               }else{
                                 //Usuário deslogado
                                 Navigator.of(context).pushNamed('/login');
