@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
+import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/telas/produtos/componentes/BarraPesquisar.dart';
 import 'package:loja_virtual/telas/produtos/componentes/ItemProduto.dart';
@@ -22,8 +23,8 @@ class TelaProdutos extends StatelessWidget {
                     onTap: () async {
                       final search = await showDialog<String>(
                         context: context,
-                        builder: (_) => BarraPesquisar(
-                            gerenciadorProdutos.pesquisa),
+                        builder: (_) =>
+                            BarraPesquisar(gerenciadorProdutos.pesquisa),
                       );
                       if (search != null) {
                         gerenciadorProdutos.pesquisa = search;
@@ -55,8 +56,8 @@ class TelaProdutos extends StatelessWidget {
                   onPressed: () async {
                     final search = await showDialog<String>(
                         context: context,
-                        builder: (_) => BarraPesquisar(
-                            gerenciadorProdutos.pesquisa));
+                        builder: (_) =>
+                            BarraPesquisar(gerenciadorProdutos.pesquisa));
                     if (search != null) {
                       gerenciadorProdutos.pesquisa = search;
                     }
@@ -85,6 +86,14 @@ class TelaProdutos extends StatelessWidget {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: temaPadrao.primaryColor,
+        onPressed: () {
+          Navigator.of(context).pushNamed('/carrinho');
+        },
+        child: Icon(Icons.shopping_cart),
       ),
     );
   }

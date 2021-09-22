@@ -38,7 +38,7 @@ void main() async {
           lazy: false,
         ),
         //Sempre que o ítem 1 sofrer alguma modificação, o ítem 2 é altualizado:
-        ProxyProvider<GerenciadorUsuarios, GerenciadorCarrinho>(
+        ChangeNotifierProxyProvider<GerenciadorUsuarios, GerenciadorCarrinho>(
           create: (_) => GerenciadorCarrinho(),
           lazy: false,
           update: (_, gerenciadorUsuario, gerenciadorCarrinho) =>
