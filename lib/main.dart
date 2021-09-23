@@ -13,8 +13,8 @@ import 'package:loja_virtual/telas/produtos/TelaProduto.dart';
 import 'package:provider/provider.dart';
 
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Colors.lightBlue,
-  scaffoldBackgroundColor: Colors.lightBlue,
+  primaryColor: Colors.green,
+  scaffoldBackgroundColor: Colors.green[400],
   appBarTheme: AppBarTheme(
     elevation: 0,
   ),

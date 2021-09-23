@@ -44,13 +44,28 @@ class ItemCarrinho extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.w300),
                         ),
                       ),
-                      Text(
-                        'R\$ ${carrinho.precoUnitario.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Consumer<Carrinho>(
+                        builder: (_, carrinhoProduto, __) {
+                          if (carrinhoProduto.temEstoque) {
+                            return Text(
+                              'R\$ ${carrinho.precoUnitario.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }
+                          else{
+                            return Text(
+                              'Sem estoque suficiente',
+                              style: TextStyle(
+                                color: Colors.red[400],
+                                fontSize: 12,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ],
                   ),

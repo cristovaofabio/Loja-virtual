@@ -7,8 +7,8 @@ import 'package:loja_virtual/models/Usuario.dart';
 
 class GerenciadorCarrinho extends ChangeNotifier {
   List<Carrinho> itens = [];
-
   Usuario? usuario;
+  num precoProdutos = 0.0;
 
   void atualizarUsuario(GerenciadorUsuarios gerenciadorUsuario) {
     usuario = gerenciadorUsuario.usuarioAtual;
@@ -33,11 +33,13 @@ class GerenciadorCarrinho extends ChangeNotifier {
       e.incremente();
     } catch (e) {
       final carrinho = Carrinho.fromProduto(produto);
+      
       carrinho.addListener(_itemAtualizado);
       itens.add(carrinho);
       usuario!.carrinhoReference
           .add(carrinho.toMap())
           .then((doc) => carrinho.id = doc.id);
+      _itemAtualizado();
     }
     notifyListeners();
   }
@@ -51,19 +53,36 @@ class GerenciadorCarrinho extends ChangeNotifier {
 
   void _itemAtualizado() {
     try {
-      for (final carrinhoProduto in itens) {
+      precoProdutos = 0.0;
+      for (int i = 0; i<itens.length; i++) {
+        final carrinhoProduto = itens[i];
+
         if (carrinhoProduto.quantidade == 0) {
           removerProdutoCarrinho(carrinhoProduto);
+          i--;
+          continue;
         } else {
+          precoProdutos += carrinhoProduto.precoTotal;
           _atualizarCarrinho(carrinhoProduto);
         }
       }
     } catch (erro) {}
+
+    notifyListeners();
   }
 
   void _atualizarCarrinho(Carrinho carrinhoProduto) {
-    usuario!.carrinhoReference
+    if(carrinhoProduto.id!=null){
+       usuario!.carrinhoReference
         .doc(carrinhoProduto.id)
         .update(carrinhoProduto.toMap());
+    }
+  }
+
+  bool get carrinhoValido {
+    for(final carrinhoProduto in itens){
+      if(!carrinhoProduto.temEstoque) return false;
+    }
+    return true;
   }
 }

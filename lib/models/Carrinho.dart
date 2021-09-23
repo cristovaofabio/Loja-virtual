@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 
-class Carrinho extends ChangeNotifier{
+class Carrinho extends ChangeNotifier {
   late String id; //Id do carrinho
   late String idProduto;
   late int quantidade;
@@ -28,24 +28,35 @@ class Carrinho extends ChangeNotifier{
     return itemTamanho.preco ?? 0;
   }
 
-  Map<String, dynamic> toMap(){
+  num get precoTotal => precoUnitario * quantidade;
+
+  Map<String, dynamic> toMap() {
     return {
-      'idProduto' : this.idProduto,
+      'idProduto': this.idProduto,
       'quantidade': this.quantidade,
-      'tamanho'   : this.tamanho,
+      'tamanho': this.tamanho,
     };
   }
 
-  bool empilhavel(Produto produto){
-    return produto.id == this.idProduto && produto.tamanhoSelecionado.nome == this.tamanho;
+  bool get temEstoque {
+    final size = itemTamanho;
+    if (size.nome!.isEmpty) {
+      return false;
+    }
+    return size.estoque! >= quantidade;
   }
 
-  void incremente(){
+  bool empilhavel(Produto produto) {
+    return produto.id == this.idProduto &&
+        produto.tamanhoSelecionado.nome == this.tamanho;
+  }
+
+  void incremente() {
     this.quantidade++;
     notifyListeners();
   }
 
-  void decremente(){
+  void decremente() {
     this.quantidade--;
     notifyListeners();
   }
@@ -62,9 +73,10 @@ class Carrinho extends ChangeNotifier{
     this.quantidade = document['quantidade'] as int;
     this.tamanho = document['tamanho'] as String;
 
-    bancoDados
-        .doc('produtos/${this.idProduto}')
-        .get()
-        .then((doc) => produto = Produto.fromDocumentSnapshot(doc));
+    bancoDados.doc('produtos/${this.idProduto}').get().then(
+      (doc) {
+        produto = Produto.fromDocumentSnapshot(doc);
+        notifyListeners();
+    });
   }
 }
