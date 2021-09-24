@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/telas/home/Home.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorPagina.dart';
 import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
@@ -15,26 +16,21 @@ class TelaBase extends StatelessWidget {
       child: PageView(
         controller: pageController,
         //Impede a movitação da página através de gestos:
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         //Colocar todas as telas:
         children: <Widget>[
-          Scaffold(
-            drawer: DrawerCustomizado(),
-            appBar: AppBar(
-              title: const Text("Início"),
-            ),
-          ),
+          Home(),
           TelaProdutos(),
           Scaffold(
             drawer: DrawerCustomizado(),
             appBar: AppBar(
-              title: const Text("Meus produtos"),
+              title: Text("Meus produtos"),
             ),
           ),
           Scaffold(
             drawer: DrawerCustomizado(),
             appBar: AppBar(
-              title: const Text("Lojas"),
+              title: Text("Lojas"),
             ),
           ),
         ],

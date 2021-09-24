@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
+import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/Produto.dart';
@@ -35,6 +36,10 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => GerenciadorProdutos(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => GerenciadorHome(),
           lazy: false,
         ),
         //Sempre que o ítem 1 sofrer alguma modificação, o ítem 2 é altualizado:

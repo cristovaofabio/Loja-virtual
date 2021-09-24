@@ -7,9 +7,7 @@ import 'package:loja_virtual/models/Usuario.dart';
 class GerenciadorUsuarios extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
-
   bool carregando = false;
-
   Usuario usuarioAtual = Usuario();
 
   GerenciadorUsuarios() {
