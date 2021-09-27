@@ -35,6 +35,8 @@ dependencies:
   provider: ^6.0.0 #monitorar mudanças em algumas variáveis
   validadores: ^1.0.5 #validar campos
   carousel_pro: ^1.0.0 #adicionar carrossel nas imagens
+  flutter_staggered_grid_view: ^0.4.0 #exibir as imagens em um grid view
+  transparent_image: ^2.0.0 #mostrar suavemente as imagens
 
 dev_dependencies:
   flutter_test:

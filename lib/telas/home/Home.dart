@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/telas/home/componentes/ListaSecao.dart';
+import 'package:loja_virtual/telas/home/componentes/SecaoStaggered.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -52,17 +53,17 @@ class _HomeState extends State<Home> {
               ),
               Consumer<GerenciadorHome>(
                 builder: (_, gerenciadorHome, __) {
-                  final List<Widget> children =
-                      gerenciadorHome.secoes.map<Widget>((secao) {
-                    switch (secao.tipo) {
-                      case 'lista':
-                        return ListaSecao(secao);
-                      case 'staggered':
-                        return Container();
-                      default:
-                        return Container();
-                    }
-                  }).toList();
+                  final List<Widget> children = gerenciadorHome.secoes.map<Widget>(
+                    (secao) {
+                      switch (secao.tipo) {
+                        case 'lista':
+                          return ListaSecao(secao);
+                        case 'staggered':
+                          return SecaoStaggered(secao);
+                        default:
+                          return Container();
+                      }
+                    }).toList();
 
                   return SliverList(
                     delegate: SliverChildListDelegate(children),

@@ -6,6 +6,8 @@ class Usuario {
   late String email;
   late String senha;
 
+  bool administrador = false;
+
   FirebaseFirestore bancoDados = FirebaseFirestore.instance;
 
   Usuario();

@@ -49,4 +49,14 @@ class GerenciadorProdutos extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Produto? encontrarProdutoPorId(String id) {
+    Produto produtoEncontrado = Produto();
+    try {
+      produtoEncontrado = todosProdutos.firstWhere((produto) => produto.id == id);
+      return produtoEncontrado;
+    } catch (e) {
+      return null;
+    }
+  }
 }

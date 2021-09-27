@@ -82,20 +82,30 @@ class GerenciadorUsuarios extends ChangeNotifier {
     //Verificar se existe algum usuário logado
     if (usuario != null) {
       //Usuário logado!
-      DocumentSnapshot documento = await bancoDados
-          .collection("usuarios")
-          .doc(usuario.uid)
-          .get();
+      DocumentSnapshot documento =
+          await bancoDados.collection("usuarios").doc(usuario.uid).get();
 
       usuarioAtual = Usuario.fromDocumentSnapshot(documento);
+
+      final docAdmin = await bancoDados
+          .collection('administradores')
+          .doc(usuarioAtual.idUsuario)
+          .get();
+      if (docAdmin.exists) {
+        usuarioAtual.administrador = true;
+      }
+
+      print(usuarioAtual.administrador);
     } else {
       //Usuário deslogado!
       usuarioAtual = Usuario();
       usuarioAtual.nome = "";
       usuarioAtual.email = "";
-
     }
 
     notifyListeners();
   }
+
+  //Se o nome não for vazio, então existe usuário logado:
+  bool get adminHabilitado => usuarioAtual.nome.isNotEmpty && usuarioAtual.administrador;
 }
