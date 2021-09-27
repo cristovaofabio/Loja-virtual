@@ -5,6 +5,7 @@ import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
+import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
 import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
@@ -49,6 +50,12 @@ void main() async {
           update: (_, gerenciadorUsuario, gerenciadorCarrinho) =>
               gerenciadorCarrinho!..atualizarUsuario(gerenciadorUsuario),
         ),
+        ChangeNotifierProxyProvider<GerenciadorUsuarios, GerenciadorUsuariosAdministradores>(
+          create: (_) => GerenciadorUsuariosAdministradores(),
+          lazy: false,
+          update: (_, gerenciadorUsuarios, gerenciadorUsuariosAdministradores) =>
+            gerenciadorUsuariosAdministradores!..atualizarUsuario(gerenciadorUsuarios),
+        )
       ],
       child: MaterialApp(
         theme: temaPadrao,

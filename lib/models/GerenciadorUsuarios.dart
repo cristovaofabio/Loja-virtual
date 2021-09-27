@@ -11,6 +11,7 @@ class GerenciadorUsuarios extends ChangeNotifier {
   Usuario usuarioAtual = Usuario();
 
   GerenciadorUsuarios() {
+    usuarioAtual.nome="";
     _carregarUsuarioAtual();
   }
 

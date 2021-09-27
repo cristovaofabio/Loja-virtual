@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/models/GerenciadorPagina.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,7 @@ class DrawerCabecalho extends StatelessWidget {
                     Navigator.of(context).pushNamed('/login');
                   }else{
                     //Sair do sistema
+                    context.read<GerenciadorPagina>().mostrarPagina(0);
                     gerenciadorUsuarios.sair();
                   }
                 },
