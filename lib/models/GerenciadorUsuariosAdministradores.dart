@@ -1,33 +1,47 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/Usuario.dart';
-import 'package:faker/faker.dart';
 
-class GerenciadorUsuariosAdministradores extends ChangeNotifier{
-
+class GerenciadorUsuariosAdministradores extends ChangeNotifier {
+  final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
   List<Usuario> usuarios = [];
+  StreamSubscription? _subscription;
 
-  void atualizarUsuario(GerenciadorUsuarios gerenciadorUsuarios){
-    if(gerenciadorUsuarios.adminHabilitado){
+  void atualizarUsuario(GerenciadorUsuarios gerenciadorUsuarios) {
+    _subscription?.cancel();
+    if (gerenciadorUsuarios.adminHabilitado) {
       _ouvinteParaUsuarios();
+    } else {
+      usuarios.clear();
+      notifyListeners();
     }
   }
 
-  void _ouvinteParaUsuarios(){
-    var faker = new Faker();
+  void _ouvinteParaUsuarios() {
+    _subscription = bancoDados.collection('usuarios').snapshots().listen(
+      (snapshot){
+        usuarios = snapshot.docs.map(
+          (documentSnapshot) => Usuario.fromDocumentSnapshot(documentSnapshot)
+        ).toList();
 
-    for(int i = 0; i < 100; i++){
-      Usuario usuario = Usuario();
-      usuario.nome = faker.person.name();
-      usuario.email = faker.internet.email();
-      usuarios.add(usuario);
-    }
-    //Ordenar lista por ordem alfabética:
-    usuarios.sort((usuario1, usuario2) => usuario1.nome.toLowerCase().compareTo(usuario2.nome.toLowerCase()));
+        //Ordenar lista por ordem alfabética:
+        usuarios.sort(
+          (usuario1, usuario2) => usuario1.nome.toLowerCase().compareTo(usuario2.nome.toLowerCase())
+        );
 
-    notifyListeners();
+        notifyListeners();
+      }
+    );
   }
 
   List<String> get nomes => usuarios.map((usuario) => usuario.nome).toList();
-
+  
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
 }

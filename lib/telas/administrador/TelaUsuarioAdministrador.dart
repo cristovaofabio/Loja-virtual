@@ -1,5 +1,6 @@
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,7 @@ class TelaUsuarioAdministrador extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerCustomizado(),
       appBar: AppBar(
         title: Text('Usuários'),
         centerTitle: true,
