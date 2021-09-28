@@ -11,6 +11,7 @@ import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
 import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
+import 'package:loja_virtual/telas/produtos/TelaEditarProduto.dart';
 import 'package:loja_virtual/telas/produtos/TelaProduto.dart';
 import 'package:provider/provider.dart';
 
@@ -66,6 +67,10 @@ void main() async {
             case '/base':
               return MaterialPageRoute(
                 builder: (_) => TelaBase(),
+              );
+            case '/editar_produto':
+              return MaterialPageRoute(
+                  builder: (_) => TelaEditarProduto()
               );
             case '/cadastro':
               return MaterialPageRoute(

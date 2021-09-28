@@ -22,6 +22,23 @@ class TelaProduto extends StatelessWidget {
         appBar: AppBar(
           title: Text(produto.nome),
           centerTitle: true,
+          actions: <Widget>[
+            Consumer<GerenciadorUsuarios>(
+              builder: (_, gerenciadorUsuarios, __){
+                if(gerenciadorUsuarios.adminHabilitado){
+                  return IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: (){
+                      Navigator.of(context)
+                          .pushReplacementNamed('/editar_produto');
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            )
+          ],
         ),
         backgroundColor: Colors.white,
         body: ListView(
