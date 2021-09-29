@@ -70,7 +70,7 @@ void main() async {
               );
             case '/editar_produto':
               return MaterialPageRoute(
-                  builder: (_) => TelaEditarProduto()
+                  builder: (_) => TelaEditarProduto(settings.arguments as Produto)
               );
             case '/cadastro':
               return MaterialPageRoute(

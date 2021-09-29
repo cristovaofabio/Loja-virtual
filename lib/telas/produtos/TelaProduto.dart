@@ -24,13 +24,14 @@ class TelaProduto extends StatelessWidget {
           centerTitle: true,
           actions: <Widget>[
             Consumer<GerenciadorUsuarios>(
-              builder: (_, gerenciadorUsuarios, __){
-                if(gerenciadorUsuarios.adminHabilitado){
+              builder: (_, gerenciadorUsuarios, __) {
+                if (gerenciadorUsuarios.adminHabilitado) {
                   return IconButton(
                     icon: Icon(Icons.edit),
-                    onPressed: (){
-                      Navigator.of(context)
-                          .pushReplacementNamed('/editar_produto');
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          '/editar_produto',
+                          arguments: produto);
                     },
                   );
                 } else {
@@ -127,18 +128,21 @@ class TelaProduto extends StatelessWidget {
                                 ? "Adicionar ao carrinho"
                                 : "Entre para comprar",
                             onPressed: (produto.tamanhoSelecionado.nome != null)
-                            ? (){
-                              if(nomeUsuario.isNotEmpty){
-                                //Usuário logado e tamanho selecionado
-                                //Adicionar ao carrinho
-                                context.read<GerenciadorCarrinho>().adicionarAoCarrinho(produto);
-                                Navigator.of(context).pushNamed('/carrinho');
-                              }else{
-                                //Usuário deslogado
-                                Navigator.of(context).pushNamed('/login');
-                              }
-                            }
-                            : (){},
+                                ? () {
+                                    if (nomeUsuario.isNotEmpty) {
+                                      //Usuário logado e tamanho selecionado
+                                      //Adicionar ao carrinho
+                                      context
+                                          .read<GerenciadorCarrinho>()
+                                          .adicionarAoCarrinho(produto);
+                                      Navigator.of(context)
+                                          .pushNamed('/carrinho');
+                                    } else {
+                                      //Usuário deslogado
+                                      Navigator.of(context).pushNamed('/login');
+                                    }
+                                  }
+                                : () {},
                           ),
                         );
                       },
