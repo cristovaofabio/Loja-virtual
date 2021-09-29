@@ -78,13 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
-  crypto:
+  cross_file:
     dependency: transitive
     description:
-      name: crypto
+      name: cross_file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "0.3.1+5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  faker:
-    dependency: "direct main"
-    description:
-      name: faker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -174,6 +167,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -205,6 +205,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image_cropper:
+    dependency: "direct main"
+    description:
+      name: image_cropper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.1"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.4+1"
+  image_picker_for_web:
+    dependency: transitive
+    description:
+      name: image_picker_for_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.3"
+  image_picker_platform_interface:
+    dependency: transitive
+    description:
+      name: image_picker_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.1"
   intl:
     dependency: transitive
     description:
@@ -366,4 +394,4 @@ packages:
     version: "1.6.3-nullsafety.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.24.0-6.0.pre"
+  flutter: ">=2.0.0"

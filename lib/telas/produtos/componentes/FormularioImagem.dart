@@ -14,8 +14,14 @@ class FormularioImagem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormField<List<dynamic>>(
-      initialValue: produto.imagens,
+      initialValue: List.from(produto.imagens),
       builder: (estado) {
+        void imagemSelecionada(File file) {
+          estado.value!.add(file);
+          estado.didChange(estado.value);
+          Navigator.of(context).pop();
+        }
+
         return AspectRatio(
           aspectRatio: 1,
           child: Carousel(
@@ -60,12 +66,16 @@ class FormularioImagem extends StatelessWidget {
                       if (Platform.isAndroid)
                         showModalBottomSheet(
                           context: context,
-                          builder: (_) => EscolherImagem(),
+                          builder: (_) => EscolherImagem(
+                            imagemSelecionada: imagemSelecionada,
+                          ),
                         );
                       else
                         showCupertinoModalPopup(
                           context: context,
-                          builder: (_) => EscolherImagem(),
+                          builder: (_) => EscolherImagem(
+                            imagemSelecionada: imagemSelecionada,
+                          ),
                         );
                     },
                   ),

@@ -38,7 +38,8 @@ dependencies:
   flutter_staggered_grid_view: ^0.4.0 #exibir as imagens em um grid view
   transparent_image: ^2.0.0 #mostrar suavemente as imagens
   alphabet_list_scroll_view: ^2.0.0 #colocar uma barra lateral apenas com letras
-  faker: ^2.0.0 #gerar falsos usuários
+  image_picker: ^0.8.3 #carregar imagens da galeria ou câmera
+  image_cropper: ^1.4.1 #recurso utilizado para cortar as imagens
 
 dev_dependencies:
   flutter_test:
