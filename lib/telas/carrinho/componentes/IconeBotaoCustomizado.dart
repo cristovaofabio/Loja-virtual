@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class IconeBotaoCustomizado extends StatelessWidget {
-
-  IconeBotaoCustomizado({required this.icone, required this.cor, required this.onTap});
+  IconeBotaoCustomizado(
+      {required this.icone, required this.cor, required this.onTap});
 
   late final IconData icone;
   late final Color cor;
@@ -20,7 +20,7 @@ class IconeBotaoCustomizado extends StatelessWidget {
             padding: EdgeInsets.all(5),
             child: Icon(
               icone,
-              color: cor,
+              color: onTap != () {} ? cor : Colors.grey,
             ),
           ),
         ),
