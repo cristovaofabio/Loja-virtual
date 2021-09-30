@@ -31,6 +31,15 @@ class Produto  extends ChangeNotifier {
     return totalEstoque > 0;
   }
 
+  num get precoBase {
+    num menor = double.infinity;
+    for(final tamanho in tamanhos){
+      if(tamanho.preco! < menor && tamanho.hasStock)
+        menor = tamanho.preco!;
+    }
+    return menor;
+  }
+
   TamanhoItem encontrarTamanho(String nome){
     try {
       return tamanhos.firstWhere((s) => s.nome == nome);
