@@ -22,7 +22,7 @@ class ItemCarrinho extends StatelessWidget {
               SizedBox(
                 height: 80,
                 width: 80,
-                child: Image.network(carrinho.produto!.imagens.first),
+                child: Image.network(carrinho.produto!.imagens!.first),
               ),
               Expanded(
                 child: Padding(
@@ -31,7 +31,7 @@ class ItemCarrinho extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        carrinho.produto!.nome,
+                        carrinho.produto!.nome!,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17.0,

@@ -62,7 +62,7 @@ class Carrinho extends ChangeNotifier {
   }
 
   Carrinho.fromProduto(this.produto) {
-    this.idProduto = this.produto!.id;
+    this.idProduto = this.produto!.id!;
     this.quantidade = 1;
     this.tamanho = this.produto!.tamanhoSelecionado.nome!;
   }

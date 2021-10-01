@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 import 'package:loja_virtual/telas/carrinho/componentes/IconeBotaoCustomizado.dart';
 
@@ -8,12 +9,13 @@ class EditarTamanhoItem extends StatelessWidget {
   final VoidCallback moverParaCima;
   final VoidCallback moverParaBaixo;
 
-  EditarTamanhoItem({Key? key,
+  EditarTamanhoItem({
+    Key? key,
     required this.tamanhoItem,
     required this.remover,
     required this.moverParaBaixo,
     required this.moverParaCima,
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,14 @@ class EditarTamanhoItem extends StatelessWidget {
               labelText: 'Título',
               isDense: true,
             ),
+            validator: (nome) {
+              if (nome!.isEmpty) return 'Inválido';
+            },
+            inputFormatters: [
+              FilteringTextInputFormatter(RegExp("[a-z A-Z á-ú Á-Ú 0-9]"),
+                  allow: true)
+            ],
+            onChanged: (nome) => tamanhoItem.nome = nome,
           ),
         ),
         SizedBox(
@@ -41,6 +51,13 @@ class EditarTamanhoItem extends StatelessWidget {
               isDense: true,
             ),
             keyboardType: TextInputType.number,
+            validator: (estoque) {
+              if (estoque!.isEmpty) return 'Inválido';
+            },
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            onChanged: (estoque) => tamanhoItem.estoque = int.tryParse(estoque),
           ),
         ),
         SizedBox(
@@ -56,6 +73,10 @@ class EditarTamanhoItem extends StatelessWidget {
               prefixText: 'R\$',
             ),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
+            validator: (preco) {
+              if (preco!.isEmpty) return 'Inválido';
+            },
+            onChanged: (preco) => tamanhoItem.preco = num.tryParse(preco),
           ),
         ),
         IconeBotaoCustomizado(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
+import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/telas/produtos/componentes/BarraPesquisar.dart';
 import 'package:loja_virtual/telas/produtos/componentes/ItemProduto.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +73,23 @@ class TelaProdutos extends StatelessWidget {
                 );
               }
             },
-          )
+          ),
+          Consumer<GerenciadorUsuarios>(
+            builder: (_, gerenciadorUsuarios, __) {
+              if (gerenciadorUsuarios.adminHabilitado) {
+                return IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      '/editar_produto',
+                    );
+                  },
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
         ],
       ),
       body: Consumer<GerenciadorProdutos>(

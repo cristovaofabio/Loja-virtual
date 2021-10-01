@@ -7,8 +7,11 @@ import 'package:loja_virtual/util/BotaoCustomizado.dart';
 
 class TelaEditarProduto extends StatelessWidget {
   final Produto produto;
+  final bool editando;
 
-  TelaEditarProduto(this.produto);
+  TelaEditarProduto(Produto? p)
+      : editando = p != null,
+        produto = p != null ? p.clone() : Produto();
 
   final _chave = GlobalKey<FormState>();
 
@@ -16,7 +19,7 @@ class TelaEditarProduto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Anúncio'),
+        title: Text(editando ? 'Editar Produto' : 'Criar Produto'),
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -44,6 +47,7 @@ class TelaEditarProduto extends StatelessWidget {
                       if (nome!.length < 6) return 'Título muito curto';
                       return null;
                     },
+                    onSaved: (nome) => produto.nome = nome,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 4),
@@ -66,24 +70,36 @@ class TelaEditarProduto extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 15),
                     child: TextFormField(
-                    initialValue: produto.descricao,
-                    style: TextStyle(fontSize: 16),
-                    decoration: InputDecoration(
-                      labelText: 'Descrição',
-                      border: InputBorder.none,
+                      initialValue: produto.descricao,
+                      style: TextStyle(fontSize: 16),
+                      decoration: InputDecoration(
+                        labelText: 'Descrição',
+                        border: InputBorder.none,
+                      ),
+                      maxLines: null,
+                      validator: (desc) {
+                        if (desc!.length < 10) return 'Descrição muito curta';
+                      },
+                      onSaved: (desc) => produto.descricao = desc,
                     ),
-                    maxLines: null,
-                    validator: (desc) {
-                      if (desc!.length < 10) return 'Descrição muito curta';
-                    },
-                  ),
                   ),
                   FormularioTamanho(produto: produto),
-                  BotaoCustomizado(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    height: 44,
+                    child: BotaoCustomizado(
                       texto: "Salvar",
                       onPressed: () {
-                        if (_chave.currentState!.validate()) {}
-                      }),
+                        if (_chave.currentState!.validate()) {
+                          _chave.currentState!.save();
+
+                          print(produto);
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             )

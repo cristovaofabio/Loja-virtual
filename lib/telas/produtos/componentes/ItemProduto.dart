@@ -23,7 +23,7 @@ class ItemProduto extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1, //A imagem irá ficar quadrada
                 child: Image.network(
-                  produto.imagens.first,
+                  produto.imagens!.first,
                   fit: BoxFit.cover,
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
@@ -46,7 +46,7 @@ class ItemProduto extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      produto.nome,
+                      produto.nome!,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,

@@ -20,7 +20,7 @@ class TelaProduto extends StatelessWidget {
       value: this.produto,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(produto.nome),
+          title: Text(produto.nome!),
           centerTitle: true,
           actions: <Widget>[
             Consumer<GerenciadorUsuarios>(
@@ -48,7 +48,7 @@ class TelaProduto extends StatelessWidget {
               //Colocar a imagem quadrada
               aspectRatio: 1,
               child: Carousel(
-                images: produto.imagens.map((url) {
+                images: produto.imagens!.map((url) {
                   return NetworkImage(url);
                 }).toList(),
                 dotSize: 4,
@@ -64,7 +64,7 @@ class TelaProduto extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Text(
-                    produto.nome,
+                    produto.nome!,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   Padding(
@@ -93,7 +93,7 @@ class TelaProduto extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    produto.descricao,
+                    produto.descricao!,
                     style: TextStyle(fontSize: 16),
                   ),
                   Padding(
@@ -108,7 +108,7 @@ class TelaProduto extends StatelessWidget {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8, //Espaçamento entre linhas
-                    children: produto.tamanhos.map((e) {
+                    children: produto.tamanhos!.map((e) {
                       return TamanhoWidget(e);
                     }).toList(),
                   ),

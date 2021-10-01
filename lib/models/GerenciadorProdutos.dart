@@ -26,7 +26,7 @@ class GerenciadorProdutos extends ChangeNotifier {
       filteredProducts.addAll(todosProdutos);
     } else {
       filteredProducts.addAll(todosProdutos
-          .where((p) => p.nome.toLowerCase().contains(pesquisa.toLowerCase())));
+          .where((p) => p.nome!.toLowerCase().contains(pesquisa.toLowerCase())));
     }
     return filteredProducts;
   }

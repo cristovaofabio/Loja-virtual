@@ -2,26 +2,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 
-class Produto  extends ChangeNotifier {
-  late String id;
-  late String nome;
-  late String descricao;
-  late List<String> imagens;
-  late List<TamanhoItem> tamanhos;
+class Produto extends ChangeNotifier {
+  String? id;
+  String? nome="";
+  String? descricao="";
+  List<String>? imagens;
+  List<TamanhoItem>? tamanhos;
+  List<dynamic>? novasImagens;
 
-  Produto();
+  Produto({this.id, this.nome, this.descricao, this.imagens, this.tamanhos}) {
+    imagens = imagens ?? [];
+    tamanhos = tamanhos ?? [];
+  }
 
   TamanhoItem _tamanhoSelecionado = TamanhoItem();
 
+  Produto clone() {
+    return Produto(
+      id: id,
+      nome: nome,
+      descricao: descricao,
+      imagens: List.from(imagens!),
+      tamanhos: tamanhos!.map((size) => size.clone()).toList(),
+    );
+  }
+
   TamanhoItem get tamanhoSelecionado => _tamanhoSelecionado;
-  set tamanhoSelecionado(TamanhoItem value){
+  set tamanhoSelecionado(TamanhoItem value) {
     _tamanhoSelecionado = value;
     notifyListeners();
   }
 
   int get totalEstoque {
     int estoque = 0;
-    for(final tamanho in tamanhos){
+    for (final tamanho in tamanhos!) {
       estoque += tamanho.estoque!;
     }
     return estoque;
@@ -33,19 +47,18 @@ class Produto  extends ChangeNotifier {
 
   num get precoBase {
     num menor = double.infinity;
-    for(final tamanho in tamanhos){
-      if(tamanho.preco! < menor && tamanho.hasStock)
-        menor = tamanho.preco!;
+    for (final tamanho in tamanhos!) {
+      if (tamanho.preco! < menor && tamanho.hasStock) menor = tamanho.preco!;
     }
     return menor;
   }
 
-  TamanhoItem encontrarTamanho(String nome){
+  TamanhoItem encontrarTamanho(String nome) {
     try {
-      return tamanhos.firstWhere((s) => s.nome == nome);
-    } catch (e){
+      return tamanhos!.firstWhere((s) => s.nome == nome);
+    } catch (e) {
       TamanhoItem tamanhoItem = TamanhoItem();
-      tamanhoItem.nome="";
+      tamanhoItem.nome = "";
       tamanhoItem.preco = 0;
       tamanhoItem.estoque = 0;
       return tamanhoItem;
@@ -57,9 +70,9 @@ class Produto  extends ChangeNotifier {
     this.nome = documentSnapshot["nome"];
     this.descricao = documentSnapshot["descricao"];
     this.imagens = List<String>.from(documentSnapshot["imagens"]);
-    this.tamanhos = (documentSnapshot["tamanhos"] as List<dynamic>).map(
- (s) =>TamanhoItem.fromMap(s as Map<String, dynamic>)).toList();
-
+    this.tamanhos = (documentSnapshot["tamanhos"] as List<dynamic>)
+        .map((s) => TamanhoItem.fromMap(s as Map<String, dynamic>))
+        .toList();
   }
 
   Map<String, dynamic> toMap() {
@@ -70,5 +83,10 @@ class Produto  extends ChangeNotifier {
       "imagens": this.imagens
     };
     return map;
+  }
+
+  @override
+  String toString() {
+    return 'Produto{id: $id, nome: $nome, descricao: $descricao, imagems: $imagens, tamanhos: $tamanhos, novasImagens: $novasImagens}';
   }
 }

@@ -14,10 +14,11 @@ class FormularioImagem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormField<List<dynamic>>(
-      initialValue: List.from(produto.imagens),
+      initialValue: List.from(produto.imagens!),
       validator: (imagens) {
         if (imagens!.isEmpty) return 'Insira ao menos uma imagem';
       },
+      onSaved: (imagens) => produto.novasImagens = imagens,
       //autovalidateMode: AutovalidateMode.always,
       builder: (estado) {
         void imagemSelecionada(File file) {
