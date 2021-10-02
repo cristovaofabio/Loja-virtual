@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
+import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/telas/home/componentes/ListaSecao.dart';
 import 'package:loja_virtual/telas/home/componentes/SecaoStaggered.dart';
 import 'package:provider/provider.dart';
@@ -49,21 +50,54 @@ class _HomeState extends State<Home> {
                     onPressed: () =>
                         Navigator.of(context).pushNamed('/carrinho'),
                   ),
+                  Consumer2<GerenciadorUsuarios, GerenciadorHome>(
+                    builder: (_, userManager, homeManager, __) {
+                      if (userManager.adminHabilitado) {
+                        if (homeManager.editando) {
+                          return PopupMenuButton(
+                            onSelected: (e) {
+                              if (e == 'Salvar') {
+                                homeManager.salvarEditando();
+                              } else {
+                                homeManager.discartarEditando();
+                              }
+                            },
+                            itemBuilder: (_) {
+                              return ['Salvar', 'Descartar'].map((e) {
+                                return PopupMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                );
+                              }).toList();
+                            },
+                          );
+                        } else {
+                          return IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              homeManager.entrarEditando();
+                            },
+                          );
+                        }
+                      } else
+                        return Container();
+                    },
+                  ),
                 ],
               ),
               Consumer<GerenciadorHome>(
                 builder: (_, gerenciadorHome, __) {
-                  final List<Widget> children = gerenciadorHome.secoes.map<Widget>(
-                    (secao) {
-                      switch (secao.tipo) {
-                        case 'lista':
-                          return ListaSecao(secao);
-                        case 'staggered':
-                          return SecaoStaggered(secao);
-                        default:
-                          return Container();
-                      }
-                    }).toList();
+                  final List<Widget> children =
+                      gerenciadorHome.secoes.map<Widget>((secao) {
+                    switch (secao.tipo) {
+                      case 'lista':
+                        return ListaSecao(secao);
+                      case 'staggered':
+                        return SecaoStaggered(secao);
+                      default:
+                        return Container();
+                    }
+                  }).toList();
 
                   return SliverList(
                     delegate: SliverChildListDelegate(children),

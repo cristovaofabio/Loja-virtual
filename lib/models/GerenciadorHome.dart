@@ -5,6 +5,7 @@ import 'package:loja_virtual/models/Secao.dart';
 class GerenciadorHome extends ChangeNotifier{
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
   List<Secao> secoes = [];
+  bool editando = false;
 
   GerenciadorHome() {
     _carregarSecoes();
@@ -18,5 +19,20 @@ class GerenciadorHome extends ChangeNotifier{
       }
       notifyListeners();
     });
+  }
+
+  void entrarEditando(){
+    editando = true;
+    notifyListeners();
+  }
+
+  void salvarEditando(){
+    editando = false;
+    notifyListeners();
+  }
+
+  void discartarEditando(){
+    editando = false;
+    notifyListeners();
   }
 }
