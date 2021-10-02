@@ -11,6 +11,14 @@ class TamanhoItem {
     this.estoque = map['estoque'] as int;
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'nome'    : nome,
+      'preco'   : preco,
+      'estoque' : estoque,
+    };
+  }
+
   bool get hasStock => estoque! > 0;
 
   TamanhoItem clone() {

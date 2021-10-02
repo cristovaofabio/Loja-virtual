@@ -59,4 +59,14 @@ class GerenciadorProdutos extends ChangeNotifier {
       return null;
     }
   }
+
+  void atualizar(Produto? produto){
+    try{
+      todosProdutos.removeWhere((p) => p.id == produto!.id);
+    }catch(erro){
+
+    }
+    todosProdutos.add(produto!);
+    notifyListeners();
+  }
 }

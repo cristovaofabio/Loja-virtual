@@ -1,14 +1,30 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:uuid/uuid.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 
 class Produto extends ChangeNotifier {
+
+  final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  Reference get storageRef => storage.ref().child("produtos").child(id!);
+
   String? id;
-  String? nome="";
-  String? descricao="";
+  String? nome = "";
+  String? descricao = "";
   List<String>? imagens;
   List<TamanhoItem>? tamanhos;
   List<dynamic>? novasImagens;
+
+  bool _carregando = false;
+  bool get carregando => _carregando;
+  set carregando(bool value){
+    _carregando = value;
+    notifyListeners();
+  }
 
   Produto({this.id, this.nome, this.descricao, this.imagens, this.tamanhos}) {
     imagens = imagens ?? [];
@@ -16,6 +32,71 @@ class Produto extends ChangeNotifier {
   }
 
   TamanhoItem _tamanhoSelecionado = TamanhoItem();
+
+  List<Map<String, dynamic>> exportTamanhoList() {
+    return tamanhos!.map((tamanho) => tamanho.toMap()).toList();
+  }
+
+  Future<void> save() async {
+    carregando = true;
+
+    final Map<String, dynamic> dados = {
+      'nome': nome,
+      'descricao': descricao,
+      'tamanhos': exportTamanhoList(), //lista de maps
+    };
+
+    if (id == null) {
+      final doc = await bancoDados.collection('produtos').add(dados);
+      id = doc.id;
+    } else {
+      await bancoDados.doc('produtos/$id').update(dados);
+    }
+
+    List<String> updateImages = [];
+
+    int contador = 0;
+
+    for (final newImage in novasImagens!) {
+      if (imagens!.contains(newImage)) {
+        updateImages.add(newImage as String);
+        contador++;
+      } else {
+        Reference arquivo = storageRef.child(Uuid().v1());
+
+        //Fazer o upload da imagem
+        UploadTask task = arquivo.putFile(newImage as File);
+        //Controlar o progresso do upload:
+        task.snapshotEvents.listen((TaskSnapshot taskSnapshot) async {
+          if (taskSnapshot.state == TaskState.running) {
+          } else if (taskSnapshot.state == TaskState.success) {
+            //Recuperar url da imagem:
+            String url = await taskSnapshot.ref.getDownloadURL();
+            updateImages.add(url);
+            contador++;
+            if (contador == novasImagens!.length) {
+              await bancoDados.doc('produtos/$id').update({'imagens': updateImages}).then((value){
+                this.imagens = updateImages;
+                notifyListeners();
+              carregando = false;
+              });
+              
+            }
+          }
+        });
+      }
+    }
+    for (final imagem in imagens!) {
+      if (!novasImagens!.contains(imagem)) {
+        try {
+          await storage.refFromURL(imagem).delete();
+        } catch (e) {
+          debugPrint('Falha ao deletar $imagem');
+        }
+      }
+    }
+  }
+  
 
   Produto clone() {
     return Produto(
@@ -87,6 +168,6 @@ class Produto extends ChangeNotifier {
 
   @override
   String toString() {
-    return 'Produto{id: $id, nome: $nome, descricao: $descricao, imagems: $imagens, tamanhos: $tamanhos, novasImagens: $novasImagens}';
+    return 'Produto{id: $id, nome: $nome, descricao: $descricao, imagens: $imagens, tamanhos: $tamanhos, novasImagens: $novasImagens}';
   }
 }

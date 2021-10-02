@@ -22,20 +22,24 @@ class ItemProduto extends StatelessWidget {
             children: <Widget>[
               AspectRatio(
                 aspectRatio: 1, //A imagem irá ficar quadrada
-                child: Image.network(
-                  produto.imagens!.first,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: temaPadrao.primaryColor,
+                child: produto.imagens!.isNotEmpty
+                    ? Image.network(
+                        produto.imagens!.first,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: temaPadrao.primaryColor,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            Text('Algum erro aconteceu!'),
+                      )
+                    : Center(
+                        child: Text("Carregando imagem..."),
                       ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) =>
-                      Text('Algum erro aconteceu!'),
-                ),
               ),
               const SizedBox(
                 width: 16,
