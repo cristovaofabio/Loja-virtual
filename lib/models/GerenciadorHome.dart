@@ -4,7 +4,8 @@ import 'package:loja_virtual/models/Secao.dart';
 
 class GerenciadorHome extends ChangeNotifier{
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
-  List<Secao> secoes = [];
+  List<Secao> _secoes = [];
+  List<Secao> _editandoSecoes = [];
   bool editando = false;
 
   GerenciadorHome() {
@@ -13,16 +14,24 @@ class GerenciadorHome extends ChangeNotifier{
 
   Future<void> _carregarSecoes() async {
     bancoDados.collection('home').snapshots().listen((snapshot) {
-      secoes.clear();
+      _secoes.clear();
       for (final DocumentSnapshot document in snapshot.docs) {
-        secoes.add(Secao.fromDocument(document));
+        _secoes.add(Secao.fromDocument(document));
       }
       notifyListeners();
     });
   }
 
+  List<Secao> get secoes {
+    if(editando)
+      return _editandoSecoes;
+    else
+      return _secoes;
+  }
+
   void entrarEditando(){
     editando = true;
+    _editandoSecoes = _secoes.map((secoes) => secoes.clone()).toList();
     notifyListeners();
   }
 

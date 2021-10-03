@@ -6,6 +6,16 @@ class Secao {
   late String tipo;
   late List<SecaoItem> itens;
 
+  Secao({required this.nome, required this.tipo, required this.itens});
+
+  Secao clone(){
+    return Secao(
+      nome: nome,
+      tipo: tipo,
+      itens: itens.map((e) => e.clone()).toList(),
+    );
+  }
+
   Secao.fromDocument(DocumentSnapshot document) {
     this.nome = document["nome"] as String;
     this.tipo = document["tipo"] as String;
