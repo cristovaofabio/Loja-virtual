@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/SecaoItem.dart';
 
-class Secao {
+class Secao extends ChangeNotifier{
   late String nome;
   late String tipo;
   late List<SecaoItem> itens;
@@ -14,6 +15,11 @@ class Secao {
       tipo: tipo,
       itens: itens.map((e) => e.clone()).toList(),
     );
+  }
+
+  void addItem(SecaoItem item){
+    itens.add(item);
+    notifyListeners();
   }
 
   Secao.fromDocument(DocumentSnapshot document) {

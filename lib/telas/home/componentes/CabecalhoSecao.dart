@@ -5,13 +5,11 @@ import 'package:loja_virtual/telas/carrinho/componentes/IconeBotaoCustomizado.da
 import 'package:provider/provider.dart';
 
 class CabecalhoSecao extends StatelessWidget {
-  CabecalhoSecao(this.secao);
-
-  late final Secao secao;
 
   @override
   Widget build(BuildContext context) {
     final homeManager = context.watch<GerenciadorHome>();
+    final secao = context.watch<Secao>();
 
     if (homeManager.editando) {
       return Row(

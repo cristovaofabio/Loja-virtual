@@ -1,5 +1,5 @@
 class SecaoItem {
-  late String imagem;
+  dynamic imagem;
   String? produto;
 
   SecaoItem({required this.imagem, this.produto});

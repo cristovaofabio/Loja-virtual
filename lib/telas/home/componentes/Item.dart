@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
@@ -33,11 +35,17 @@ class Item extends StatelessWidget {
                 color: temaPadrao.primaryColor,
               ),
             ),
-            FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: item.imagem,
-              fit: BoxFit.cover,
-            ),
+            if (item.imagem is String)
+              FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: item.imagem,
+                fit: BoxFit.cover,
+              )
+            else
+              Image.file(
+                item.imagem as File,
+                fit: BoxFit.cover,
+              ),
           ],
         ),
       ),
