@@ -22,6 +22,16 @@ class GerenciadorHome extends ChangeNotifier{
     });
   }
 
+  void addSecao(Secao secao){
+    _editandoSecoes.add(secao);
+    notifyListeners();
+  }
+
+  void removerSecao(Secao secao){
+    _editandoSecoes.remove(secao);
+    notifyListeners();
+  }
+
   List<Secao> get secoes {
     if(editando)
       return _editandoSecoes;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
+import 'package:loja_virtual/telas/home/componentes/AddSecaoWidget.dart';
 import 'package:loja_virtual/telas/home/componentes/ListaSecao.dart';
 import 'package:loja_virtual/telas/home/componentes/SecaoStaggered.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +99,9 @@ class _HomeState extends State<Home> {
                         return Container();
                     }
                   }).toList();
+
+                  if (gerenciadorHome.editando)
+                    children.add(AddSecaoWidget(gerenciadorHome));
 
                   return SliverList(
                     delegate: SliverChildListDelegate(children),
