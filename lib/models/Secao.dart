@@ -22,6 +22,11 @@ class Secao extends ChangeNotifier{
     notifyListeners();
   }
 
+  void removerItem(SecaoItem item){
+    itens.remove(item);
+    notifyListeners();
+  }
+
   Secao.fromDocument(DocumentSnapshot document) {
     this.nome = document["nome"] as String;
     this.tipo = document["tipo"] as String;
