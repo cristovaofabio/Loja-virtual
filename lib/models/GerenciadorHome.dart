@@ -7,13 +7,14 @@ class GerenciadorHome extends ChangeNotifier{
   final List<Secao> _secoes = [];
   List<Secao> _editandoSecoes = [];
   bool editando = false;
+  bool carregando = false;
 
   GerenciadorHome() {
     _carregarSecoes();
   }
 
   Future<void> _carregarSecoes() async {
-    bancoDados.collection('home').snapshots().listen((snapshot) {
+    bancoDados.collection('home').orderBy('pos').snapshots().listen((snapshot) {
       _secoes.clear();
       for (final DocumentSnapshot document in snapshot.docs) {
         _secoes.add(Secao.fromDocument(document));
@@ -45,14 +46,33 @@ class GerenciadorHome extends ChangeNotifier{
     notifyListeners();
   }
 
-  void salvarEditando(){
+  Future<void> salvarEditando() async{
     bool valid = true;
     for(final secao in _editandoSecoes){
       if(secao.valid()==false) valid = false;
     }
     if(valid==false) return;
-    /* editando = false;
-    notifyListeners(); */
+
+    carregando = true;
+    notifyListeners();
+
+    int contador = 0;
+    for(final section in _editandoSecoes){
+      await section.save(contador);
+      contador++;
+    }
+
+    for(final section in List.from(_secoes)){
+      if(!_editandoSecoes.any((element) => element.id == section.id)){
+        await section.delete();
+      }
+    }
+
+    if(contador==_editandoSecoes.length){
+      carregando = false;
+      editando = false;
+      notifyListeners();
+    }
   }
 
   void discartarEditando(){

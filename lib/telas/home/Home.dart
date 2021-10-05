@@ -53,7 +53,8 @@ class _HomeState extends State<Home> {
                   ),
                   Consumer2<GerenciadorUsuarios, GerenciadorHome>(
                     builder: (_, userManager, homeManager, __) {
-                      if (userManager.adminHabilitado) {
+                      if (userManager.adminHabilitado &&
+                          !homeManager.carregando) {
                         if (homeManager.editando) {
                           return PopupMenuButton(
                             onSelected: (e) {
@@ -88,6 +89,14 @@ class _HomeState extends State<Home> {
               ),
               Consumer<GerenciadorHome>(
                 builder: (_, gerenciadorHome, __) {
+                  if (gerenciadorHome.carregando) {
+                    return SliverToBoxAdapter(
+                      child: LinearProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                        backgroundColor: Colors.transparent,
+                      ),
+                    );
+                  }
                   final List<Widget> children =
                       gerenciadorHome.secoes.map<Widget>((secao) {
                     switch (secao.tipo) {

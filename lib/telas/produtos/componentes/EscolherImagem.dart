@@ -44,7 +44,9 @@ class EscolherImagem extends StatelessWidget {
               onPressed: () async {
                 XFile? imagem =
                     await _picker.pickImage(source: ImageSource.camera);
-                editarImagem(imagem!.path, context);
+                    if(imagem!=null){
+                      editarImagem(imagem.path, context);
+                    }
               },
               child: Text('Câmera'),
             ),
@@ -52,7 +54,9 @@ class EscolherImagem extends StatelessWidget {
               onPressed: () async {
                 XFile? imagem =
                     await _picker.pickImage(source: ImageSource.gallery);
-                editarImagem(imagem!.path, context);
+                    if(imagem!=null){
+                      editarImagem(imagem.path, context);
+                    }
               },
               child: Text('Galeria'),
             ),

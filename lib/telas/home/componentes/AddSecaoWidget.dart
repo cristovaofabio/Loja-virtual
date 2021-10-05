@@ -14,7 +14,7 @@ class AddSecaoWidget extends StatelessWidget {
         Expanded(
           child: TextButton(
             onPressed: () {
-              homeManager.addSecao(Secao(nome: "nova secao", tipo: "lista", itens: []));
+              homeManager.addSecao(Secao(id:"",nome: "nova secao", tipo: "lista", itens: []));
             },
             child: Text(
               'Adicionar Lista',
@@ -27,7 +27,7 @@ class AddSecaoWidget extends StatelessWidget {
         Expanded(
           child: TextButton(
             onPressed: () {
-              homeManager.addSecao(Secao(nome: "novo staggered", tipo: "staggered", itens: []));
+              homeManager.addSecao(Secao(id:"",nome: "novo staggered", tipo: "staggered", itens: []));
             },
             child: Text(
               'Adicionar Grade',
