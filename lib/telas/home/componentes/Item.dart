@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
+import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/models/Secao.dart';
 import 'package:loja_virtual/models/SecaoItem.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +35,25 @@ class Item extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (_) {
+                  final product;
+                  if(item.produto!=null){
+                    product = context
+                      .read<GerenciadorProdutos>()
+                      .encontrarProdutoPorId(item.produto!);
+                  }else{
+                    product = null;
+                  }
                   return AlertDialog(
                     title: Text('Editar Item'),
+                    content: product != null
+                        ? ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: Image.network(product.imagens!.first),
+                            title: Text(product.nome!),
+                            subtitle: Text(
+                                'R\$ ${product.precoBase.toStringAsFixed(2)}'),
+                          )
+                        : null,
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
@@ -50,6 +68,29 @@ class Item extends StatelessWidget {
                           ),
                           child: Text(
                             "Excluir",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          if (product != null) {
+                            item.produto = null;
+                          } else {
+                            final Produto product = await Navigator.of(context)
+                                .pushNamed('/produtoSelecionado') as Produto;
+                            item.produto = product.id;
+                          }
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[400],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            product != null ? 'Desvincular' : 'Vincular',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),

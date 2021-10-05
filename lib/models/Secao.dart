@@ -6,6 +6,7 @@ class Secao extends ChangeNotifier{
   late String nome;
   late String tipo;
   late List<SecaoItem> itens;
+  String _error="";
 
   Secao({required this.nome, required this.tipo, required this.itens});
 
@@ -15,6 +16,24 @@ class Secao extends ChangeNotifier{
       tipo: tipo,
       itens: itens.map((e) => e.clone()).toList(),
     );
+  }
+
+  String get error => _error;
+  set error(String value){
+    _error = value;
+    notifyListeners();
+  }
+
+  bool valid(){
+    //Verifica se uma determinada secao é válida
+    if(nome.isEmpty){
+      error = 'Título inválido';
+    } else if(itens.isEmpty){
+      error = 'Insira ao menos uma imagem';
+    } else {
+      error = "";
+    }
+    return error.isEmpty;
   }
 
   void addItem(SecaoItem item){

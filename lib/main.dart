@@ -13,6 +13,7 @@ import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
 import 'package:loja_virtual/telas/produtos/TelaEditarProduto.dart';
 import 'package:loja_virtual/telas/produtos/TelaProduto.dart';
+import 'package:loja_virtual/telas/produtos/TelaProdutoSelecionado.dart';
 import 'package:provider/provider.dart';
 
 final ThemeData temaPadrao = ThemeData(
@@ -79,6 +80,10 @@ void main() async {
             case '/produto':
               return MaterialPageRoute(
                 builder: (_) => TelaProduto(settings.arguments as Produto),
+              );
+            case '/produtoSelecionado':
+              return MaterialPageRoute(
+                  builder: (_) => TelaProdutoSelecionado(),
               );
             case '/carrinho':
               return MaterialPageRoute(

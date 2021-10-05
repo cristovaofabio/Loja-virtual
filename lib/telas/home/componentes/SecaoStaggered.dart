@@ -30,6 +30,7 @@ class SecaoStaggered extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true, //A lista será a menor possívels
                   crossAxisCount: 4, //Quantidade de unidades de medida (quadrados) na largura
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: homeManager.editando
                       ? secao.itens.length + 1
                       : secao.itens.length,
