@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,11 @@ import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
 import 'package:loja_virtual/models/Produto.dart';
+import 'package:loja_virtual/servicos/CepAbertoService.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
 import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
+import 'package:loja_virtual/telas/endereco/TelaEndereco.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
 import 'package:loja_virtual/telas/produtos/TelaEditarProduto.dart';
 import 'package:loja_virtual/telas/produtos/TelaProduto.dart';
@@ -25,10 +29,23 @@ final ThemeData temaPadrao = ThemeData(
   visualDensity: VisualDensity.adaptivePlatformDensity,
 );
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() async {
   //Inicializar o Firebase:
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
+  HttpOverrides.global = new MyHttpOverrides();
+
+  CepAbertoService().getEnderecoCep('13.087-000');
 
   runApp(
     MultiProvider(
@@ -52,11 +69,14 @@ void main() async {
           update: (_, gerenciadorUsuario, gerenciadorCarrinho) =>
               gerenciadorCarrinho!..atualizarUsuario(gerenciadorUsuario),
         ),
-        ChangeNotifierProxyProvider<GerenciadorUsuarios, GerenciadorUsuariosAdministradores>(
+        ChangeNotifierProxyProvider<GerenciadorUsuarios,
+            GerenciadorUsuariosAdministradores>(
           create: (_) => GerenciadorUsuariosAdministradores(),
           lazy: false,
-          update: (_, gerenciadorUsuarios, gerenciadorUsuariosAdministradores) =>
-            gerenciadorUsuariosAdministradores!..atualizarUsuario(gerenciadorUsuarios),
+          update:
+              (_, gerenciadorUsuarios, gerenciadorUsuariosAdministradores) =>
+                  gerenciadorUsuariosAdministradores!
+                    ..atualizarUsuario(gerenciadorUsuarios),
         )
       ],
       child: MaterialApp(
@@ -69,10 +89,12 @@ void main() async {
               return MaterialPageRoute(
                 builder: (_) => TelaBase(),
               );
+            case '/endereco':
+              return MaterialPageRoute(builder: (_) => TelaEndereco());
             case '/editar_produto':
               return MaterialPageRoute(
-                  builder: (_) => TelaEditarProduto(settings.arguments as Produto)
-              );
+                  builder: (_) =>
+                      TelaEditarProduto(settings.arguments as Produto));
             case '/cadastro':
               return MaterialPageRoute(
                 builder: (_) => TelaCadastro(),
@@ -83,7 +105,7 @@ void main() async {
               );
             case '/produtoSelecionado':
               return MaterialPageRoute(
-                  builder: (_) => TelaProdutoSelecionado(),
+                builder: (_) => TelaProdutoSelecionado(),
               );
             case '/carrinho':
               return MaterialPageRoute(

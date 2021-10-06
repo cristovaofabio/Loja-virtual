@@ -92,6 +92,8 @@ class Secao extends ChangeNotifier {
     for (final item in this.itens) {
       //As imagens adicionadas recentimente ficarão por último
       if ((item.imagem is String) == false) {
+        houveAtualizacao = true;
+        
         Reference arquivo = storageRef.child(Uuid().v1());
         //Fazer o upload da imagem:
         UploadTask task = arquivo.putFile(item.imagem as File);
@@ -105,7 +107,6 @@ class Secao extends ChangeNotifier {
             item.imagem = url;
 
             if (contador == itens.length) {
-              houveAtualizacao = true;
               try {
                 final Map<String, dynamic> itemsData = {
                   'itens': this.itens.map((e) => e.toMap()).toList()

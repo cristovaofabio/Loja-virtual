@@ -24,7 +24,9 @@ class TelaCarrinho extends StatelessWidget {
               PrecoCarrinho(
                 textoBotao: "Continuar para Entrega",
                 onPressed: gerenciadorCarrinho.carrinhoValido 
-                ? () {} 
+                ? () {
+                  Navigator.of(context).pushNamed('/endereco');
+                } 
                 : () {},
               ),
             ],
