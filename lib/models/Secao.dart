@@ -87,9 +87,11 @@ class Secao extends ChangeNotifier {
     }
 
     int contador = 0;
+    bool houveAtualizacao = false;
 
     for (final item in this.itens) {
-      if (!(item.imagem is String)) {
+      //As imagens adicionadas recentimente ficarão por último
+      if ((item.imagem is String) == false) {
         Reference arquivo = storageRef.child(Uuid().v1());
         //Fazer o upload da imagem:
         UploadTask task = arquivo.putFile(item.imagem as File);
@@ -102,18 +104,31 @@ class Secao extends ChangeNotifier {
             contador++;
             item.imagem = url;
 
-            try {
-              final Map<String, dynamic> itemsData = {
-                'itens': this.itens.map((e) => e.toMap()).toList()
-              };
-              await bancoDados.doc('home/$id').update(itemsData);
-            } catch (erro) {
-              print("erro: " + erro.toString());
+            if (contador == itens.length) {
+              houveAtualizacao = true;
+              try {
+                final Map<String, dynamic> itemsData = {
+                  'itens': this.itens.map((e) => e.toMap()).toList()
+                };
+                await bancoDados.doc('home/$id').update(itemsData);
+              } catch (erro) {
+                print("erro: " + erro.toString());
+              }
             }
           }
         });
       } else {
         contador++;
+      }
+    }
+    if (houveAtualizacao == false) {
+      try {
+        final Map<String, dynamic> itemsData = {
+          'itens': this.itens.map((e) => e.toMap()).toList()
+        };
+        await bancoDados.doc('home/$id').update(itemsData);
+      } catch (erro) {
+        print("erro: " + erro.toString());
       }
     }
 

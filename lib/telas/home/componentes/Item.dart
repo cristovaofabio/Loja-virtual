@@ -36,11 +36,11 @@ class Item extends StatelessWidget {
                 context: context,
                 builder: (_) {
                   final product;
-                  if(item.produto!=null){
+                  if (item.produto != null) {
                     product = context
-                      .read<GerenciadorProdutos>()
-                      .encontrarProdutoPorId(item.produto!);
-                  }else{
+                        .read<GerenciadorProdutos>()
+                        .encontrarProdutoPorId(item.produto!);
+                  } else {
                     product = null;
                   }
                   return AlertDialog(
@@ -77,9 +77,11 @@ class Item extends StatelessWidget {
                           if (product != null) {
                             item.produto = null;
                           } else {
-                            final Produto product = await Navigator.of(context)
+                            final Produto? product = await Navigator.of(context)
                                 .pushNamed('/produtoSelecionado') as Produto;
-                            item.produto = product.id;
+                            if (product != null) {
+                              item.produto = product.id;
+                            }
                           }
                           Navigator.of(context).pop();
                         },
