@@ -41,8 +41,8 @@ dependencies:
   image_picker: ^0.8.3 #carregar imagens da galeria ou câmera
   image_cropper: ^1.4.1 #recurso utilizado para cortar as imagens
   uuid: ^3.0.4 #gerar nomes únicos para as imagens
-  dio: ^4.0.0 #requisicoes http client
   http: ^0.13.3 #requisicoes http client
+  brasil_fields: ^1.2.0 #padroes e formatos brasileiros
 
 dev_dependencies:
   flutter_test:

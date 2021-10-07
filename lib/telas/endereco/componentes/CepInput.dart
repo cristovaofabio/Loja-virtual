@@ -1,9 +1,12 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/util/BotaoCustomizado.dart';
+import 'package:provider/provider.dart';
 
 class CepInput extends StatelessWidget {
-  const CepInput({Key? key}) : super(key: key);
+  final TextEditingController cepController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +14,7 @@ class CepInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextFormField(
+          controller: cepController,
           decoration: InputDecoration(
             isDense: true,
             labelText: 'CEP',
@@ -18,12 +22,27 @@ class CepInput extends StatelessWidget {
           ),
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
+            CepInputFormatter(),
           ],
           keyboardType: TextInputType.number,
+          validator: (cep) {
+            if (cep!.isEmpty) {
+              return 'Campo obrigatório';
+            } else if (cep.length != 10) {
+              return 'CEP Inválido';
+            }
+            return null;
+          },
         ),
         BotaoCustomizado(
           texto: "Buscar CEP",
-          onPressed: () {},
+          onPressed: () {
+            if (Form.of(context)!.validate()) {
+              context
+                  .read<GerenciadorCarrinho>()
+                  .getEndereco(cepController.text);
+            }
+          },
         ),
       ],
     );

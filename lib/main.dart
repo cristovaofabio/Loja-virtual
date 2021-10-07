@@ -42,10 +42,8 @@ void main() async {
   //Inicializar o Firebase:
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
-  HttpOverrides.global = new MyHttpOverrides();
 
-  CepAbertoService().getEnderecoCep('13.087-000');
+  HttpOverrides.global = new MyHttpOverrides();
 
   runApp(
     MultiProvider(
