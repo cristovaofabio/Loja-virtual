@@ -9,7 +9,6 @@ import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
 import 'package:loja_virtual/models/Produto.dart';
-import 'package:loja_virtual/servicos/CepAbertoService.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
 import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:loja_virtual/models/Carrinho.dart';
 import 'package:loja_virtual/models/Endereco.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
@@ -8,6 +9,8 @@ import 'package:loja_virtual/models/Usuario.dart';
 import 'package:loja_virtual/servicos/CepAbertoService.dart';
 
 class GerenciadorCarrinho extends ChangeNotifier {
+  final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
+
   List<Carrinho> itens = [];
   Usuario? usuario;
   Endereco? endereco;
@@ -110,5 +113,36 @@ class GerenciadorCarrinho extends ChangeNotifier {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void setEndereco(Endereco endereco) async{
+    this.endereco = endereco;
+
+    await calcularEntrega(endereco.lat!, endereco.long!);
+  }
+
+  void removerEndereco(){
+    endereco = null;
+    notifyListeners();
+  }
+
+  Future<void> calcularEntrega(double lat, double long) async {
+    //Pegando dados de localizacao da loja:
+    final DocumentSnapshot documentSnapshot = await bancoDados.doc('aux/entrega').get();
+
+    Map<String, dynamic> dados =
+        documentSnapshot.data() as Map<String, dynamic>;
+
+    final latStore = dados["lat"] as double;
+    final longStore = dados['long'] as double;
+
+    final maxkm = dados['maxkm'] as num;
+
+    //Distancia em linha reta:
+    double dis = Geolocator.distanceBetween(latStore, longStore, lat, long);
+
+    dis /= 1000.0;
+
+    print('Distancia $dis');
   }
 }

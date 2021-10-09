@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class IconeBotaoCustomizado extends StatelessWidget {
   IconeBotaoCustomizado(
-      {required this.icone, required this.cor, required this.onTap});
-
+      {required this.icone, required this.cor, required this.onTap, this.size});
   late final IconData icone;
   late final Color cor;
   late final VoidCallback onTap;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,7 @@ class IconeBotaoCustomizado extends StatelessWidget {
             child: Icon(
               icone,
               color: onTap != () {} ? cor : Colors.grey,
+              size: size ?? 24,
             ),
           ),
         ),

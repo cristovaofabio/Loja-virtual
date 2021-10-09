@@ -43,6 +43,7 @@ dependencies:
   uuid: ^3.0.4 #gerar nomes únicos para as imagens
   http: ^0.13.3 #requisicoes http client
   brasil_fields: ^1.2.0 #padroes e formatos brasileiros
+  geolocator: ^7.4.0 #servicos especificos de localizacao
 
 dev_dependencies:
   flutter_test:

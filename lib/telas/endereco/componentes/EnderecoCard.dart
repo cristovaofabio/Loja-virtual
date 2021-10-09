@@ -29,8 +29,7 @@ class EnderecoCard extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  CepInput(),
-                  if(endereco.zipCode!=null)
+                  CepInput(endereco),
                   EnderecoInputField(endereco),
                 ],
               ),
