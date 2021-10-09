@@ -12,7 +12,9 @@ class EnderecoInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (endereco!.zipCode != null)
+    final cartManager = context.watch<GerenciadorCarrinho>();
+
+    if (endereco!.zipCode != null && cartManager.precoEntrega == null)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -144,14 +146,36 @@ class EnderecoInputField extends StatelessWidget {
           ),
           BotaoCustomizado(
             texto: "Calcular Frete",
-            onPressed: () {
+            onPressed: () async {
               if (Form.of(context)!.validate()) {
                 Form.of(context)!.save();
-                context.read<GerenciadorCarrinho>().setEndereco(endereco!);
+                try {
+                  await context
+                      .read<GerenciadorCarrinho>()
+                      .setEndereco(endereco!);
+                } catch (erro) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("$erro"),
+                      backgroundColor: Colors.red[400],
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  );
+                }
               }
             },
           ),
         ],
+      );
+    else if (endereco!.zipCode != null)
+      return Padding(
+        padding: EdgeInsets.only(bottom: 16),
+        child: Text(
+            '${endereco!.rua}, ${endereco!.numero}\n${endereco!.distrito}\n'
+            '${endereco!.cidade} - ${endereco!.estado}'),
       );
     else
       return Container();

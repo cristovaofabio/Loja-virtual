@@ -13,13 +13,16 @@ class PrecoCarrinho extends StatelessWidget {
   Widget build(BuildContext context) {
     final gerenciadorCarrinho = context.watch<GerenciadorCarrinho>();
     final precosProdutos = gerenciadorCarrinho.precoProdutos;
+    final precoEntrega = gerenciadorCarrinho.precoEntrega;
+    final precoTotal = gerenciadorCarrinho.precoTotal;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       child: Padding(
         padding: EdgeInsets.fromLTRB(15, 15, 15, 4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch, //Ocupar a largura máxima
+          crossAxisAlignment:
+              CrossAxisAlignment.stretch, //Ocupar a largura máxima
           children: <Widget>[
             Text(
               'Resumo do Pedido',
@@ -29,7 +32,7 @@ class PrecoCarrinho extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 12,
             ),
             Row(
@@ -40,6 +43,16 @@ class PrecoCarrinho extends StatelessWidget {
               ],
             ),
             Divider(),
+            if (precoEntrega != null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Entrega'),
+                  Text('R\$ ${precoEntrega.toStringAsFixed(2)}')
+                ],
+              ),
+              Divider(),
+            ],
             SizedBox(
               height: 12,
             ),
@@ -51,7 +64,7 @@ class PrecoCarrinho extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  'R\$ ${precosProdutos.toStringAsFixed(2)}',
+                  'R\$ ${precoTotal.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 16,

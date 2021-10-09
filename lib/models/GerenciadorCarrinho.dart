@@ -15,6 +15,10 @@ class GerenciadorCarrinho extends ChangeNotifier {
   Usuario? usuario;
   Endereco? endereco;
   num precoProdutos = 0.0;
+  num? precoEntrega;
+
+  num get precoTotal => precoProdutos + (precoEntrega ?? 0);
+  bool get enderecoValido => endereco != null && precoEntrega != null;
 
   void atualizarUsuario(GerenciadorUsuarios gerenciadorUsuario) {
     usuario = gerenciadorUsuario.usuarioAtual;
@@ -98,16 +102,15 @@ class GerenciadorCarrinho extends ChangeNotifier {
     try {
       final cepAbertoEndereco = await cepAbertoService.getEnderecoCep(cep);
 
-      if(cepAbertoEndereco != null){
+      if (cepAbertoEndereco != null) {
         endereco = Endereco(
-          rua: cepAbertoEndereco.logradouro,
-          distrito: cepAbertoEndereco.bairro,
-          zipCode: cepAbertoEndereco.cep,
-          cidade: cepAbertoEndereco.cidade.nome,
-          estado: cepAbertoEndereco.estado.sigla,
-          lat: cepAbertoEndereco.latitude,
-          long: cepAbertoEndereco.longitude
-        );
+            rua: cepAbertoEndereco.logradouro,
+            distrito: cepAbertoEndereco.bairro,
+            zipCode: cepAbertoEndereco.cep,
+            cidade: cepAbertoEndereco.cidade.nome,
+            estado: cepAbertoEndereco.estado.sigla,
+            lat: cepAbertoEndereco.latitude,
+            long: cepAbertoEndereco.longitude);
         notifyListeners();
       }
     } catch (e) {
@@ -115,34 +118,47 @@ class GerenciadorCarrinho extends ChangeNotifier {
     }
   }
 
-  void setEndereco(Endereco endereco) async{
+  Future<void> setEndereco(Endereco endereco) async {
     this.endereco = endereco;
 
     await calcularEntrega(endereco.lat!, endereco.long!);
+
+    if (await calcularEntrega(endereco.lat!, endereco.long!)) {
+      print('price $precoEntrega');
+      notifyListeners();
+    } else {
+      return Future.error('Endereço fora do raio de entrega');
+    }
   }
 
-  void removerEndereco(){
+  void removerEndereco() {
     endereco = null;
+    precoEntrega = null;
     notifyListeners();
   }
 
-  Future<void> calcularEntrega(double lat, double long) async {
+  Future<bool> calcularEntrega(double lat, double long) async {
     //Pegando dados de localizacao da loja:
-    final DocumentSnapshot documentSnapshot = await bancoDados.doc('aux/entrega').get();
+    final DocumentSnapshot documentSnapshot =
+        await bancoDados.doc('aux/entrega').get();
 
     Map<String, dynamic> dados =
         documentSnapshot.data() as Map<String, dynamic>;
 
     final latStore = dados["lat"] as double;
     final longStore = dados['long'] as double;
-
+    final precoBase = dados['base'] as num;
+    final precoPorKm = dados['km'] as num;
     final maxkm = dados['maxkm'] as num;
 
     //Distancia em linha reta:
     double dis = Geolocator.distanceBetween(latStore, longStore, lat, long);
-
     dis /= 1000.0;
 
-    print('Distancia $dis');
+    if (dis > maxkm) {
+      return false;
+    }
+    precoEntrega = precoBase + dis * precoPorKm;
+    return true;
   }
 }
