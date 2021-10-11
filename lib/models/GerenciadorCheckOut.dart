@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
+import 'package:loja_virtual/models/Produto.dart';
 
 class GerenciadorCheckOut extends ChangeNotifier {
   GerenciadorCarrinho? gerenciadorCarrinho;
@@ -11,8 +12,12 @@ class GerenciadorCheckOut extends ChangeNotifier {
     this.gerenciadorCarrinho = gerenciadorCarrinho;
   }
 
-  void checkout() {
-    _decrementStock();
+  Future<void> checkout() async {
+    try {
+      await _decrementarEstoque();
+    } catch (erro) {
+      debugPrint(erro.toString());
+    }
 
     _getOrderId().then((value) => print(value));
   }
@@ -37,9 +42,41 @@ class GerenciadorCheckOut extends ChangeNotifier {
     }
   }
 
-  void _decrementStock() {
-    // 1. Ler todos os estoques 3xM
-    // 2. Decremento localmente os estoques 2xM
-    // 3. Salvar os estoques no firebase 2xM
+  Future<void> _decrementarEstoque() {
+    return bancoDados.runTransaction((tx) async {
+      final List<Produto> produtosParaAtualizar = [];
+      final List<Produto> produtosSemEstoque = [];
+
+      for (final cartProduct in gerenciadorCarrinho!.itens) {
+        Produto produto;
+
+        if (produtosParaAtualizar.any((p) => p.id == cartProduct.idProduto)) {
+          produto = produtosParaAtualizar.firstWhere((p) => p.id == cartProduct.idProduto);
+        } else {
+          final doc = await tx.get(bancoDados.doc('produtos/${cartProduct.idProduto}'));
+          produto = Produto.fromDocumentSnapshot(doc);
+        }
+
+        cartProduct.produto = produto;
+
+        final size = produto.encontrarTamanho(cartProduct.tamanho);
+        if (size.estoque! - cartProduct.quantidade < 0) {
+          produtosSemEstoque.add(produto);
+        } else {
+          size.estoque = size.estoque! - cartProduct.quantidade;
+          produtosParaAtualizar.add(produto);
+        }
+      }
+
+      if (produtosSemEstoque.isNotEmpty) {
+        return Future.error(
+            '${produtosSemEstoque.length} produtos sem estoque');
+      }
+
+      for (final product in produtosParaAtualizar) {
+        tx.update(bancoDados.doc('produtos/${product.id}'),
+            {'tamanhos': product.exportTamanhoList()});
+      }
+    });
   }
 }
