@@ -12,6 +12,7 @@ import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
 import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
+import 'package:loja_virtual/telas/checkout/TelaCheckout.dart';
 import 'package:loja_virtual/telas/endereco/TelaEndereco.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
 import 'package:loja_virtual/telas/produtos/TelaEditarProduto.dart';
@@ -88,6 +89,10 @@ void main() async {
               );
             case '/endereco':
               return MaterialPageRoute(builder: (_) => TelaEndereco());
+            case '/checkout':
+              return MaterialPageRoute(
+                builder: (_) => TelaCheckout(),
+              );
             case '/editar_produto':
               return MaterialPageRoute(
                   builder: (_) =>

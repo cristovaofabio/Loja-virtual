@@ -20,7 +20,9 @@ class TelaEndereco extends StatelessWidget {
               if (gerenciadorCarrinho.enderecoValido) {
                 return PrecoCarrinho(
                   textoBotao: 'Continuar para o Pagamento',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/checkout');
+                  },
                 );
               } else {
                 return Container();
