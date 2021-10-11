@@ -17,15 +17,26 @@ class GerenciadorCarrinho extends ChangeNotifier {
   num precoProdutos = 0.0;
   num? precoEntrega;
 
+  bool _carregando = false;
+
+  bool get carregando => _carregando;
+  set carregando(bool value) {
+    _carregando = value;
+    notifyListeners();
+  }
+
   num get precoTotal => precoProdutos + (precoEntrega ?? 0);
   bool get enderecoValido => endereco != null && precoEntrega != null;
 
   void atualizarUsuario(GerenciadorUsuarios gerenciadorUsuario) {
     usuario = gerenciadorUsuario.usuarioAtual;
+    precoProdutos = 0.0;
     itens.clear();
+    removerEndereco();
 
     if (usuario != null) {
       _carregarItensCarrinho();
+      _carregarEnderecoUsuario();
     }
   }
 
@@ -35,6 +46,15 @@ class GerenciadorCarrinho extends ChangeNotifier {
     itens = carrinhoSnap.docs
         .map((d) => Carrinho.fromDocument(d)..addListener(_itemAtualizado))
         .toList();
+  }
+
+  Future<void> _carregarEnderecoUsuario() async {
+    if (usuario!.endereco != null &&
+        await calcularEntrega(
+            usuario!.endereco!.lat!, usuario!.endereco!.long!)) {
+      endereco = usuario!.endereco;
+      notifyListeners();
+    }
   }
 
   void adicionarAoCarrinho(Produto produto) {
@@ -97,6 +117,7 @@ class GerenciadorCarrinho extends ChangeNotifier {
   }
 
   Future<void> getEndereco(String cep) async {
+    carregando = true;
     final cepAbertoService = CepAbertoService();
 
     try {
@@ -111,22 +132,25 @@ class GerenciadorCarrinho extends ChangeNotifier {
             estado: cepAbertoEndereco.estado.sigla,
             lat: cepAbertoEndereco.latitude,
             long: cepAbertoEndereco.longitude);
-        notifyListeners();
       }
+      carregando = false;
     } catch (e) {
-      debugPrint(e.toString());
+      carregando = false;
+      return Future.error('CEP Inválido');
     }
   }
 
   Future<void> setEndereco(Endereco endereco) async {
+    carregando = true;
     this.endereco = endereco;
 
     await calcularEntrega(endereco.lat!, endereco.long!);
 
     if (await calcularEntrega(endereco.lat!, endereco.long!)) {
-      print('price $precoEntrega');
-      notifyListeners();
+      usuario!.setEndereco(endereco);
+      carregando = false;
     } else {
+      carregando = false;
       return Future.error('Endereço fora do raio de entrega');
     }
   }

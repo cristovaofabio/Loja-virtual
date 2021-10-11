@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/Endereco.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/util/BotaoCustomizado.dart';
@@ -19,6 +20,7 @@ class EnderecoInputField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           TextFormField(
+            enabled: !cartManager.carregando,
             initialValue: (endereco!.rua == "null") ? "" : endereco!.rua,
             decoration: InputDecoration(
               isDense: true,
@@ -38,6 +40,7 @@ class EnderecoInputField extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: TextFormField(
+                  enabled: !cartManager.carregando,
                   initialValue: endereco!.numero,
                   decoration: InputDecoration(
                     isDense: true,
@@ -63,6 +66,7 @@ class EnderecoInputField extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  enabled: !cartManager.carregando,
                   initialValue: endereco!.complemento,
                   decoration: InputDecoration(
                     isDense: true,
@@ -75,6 +79,7 @@ class EnderecoInputField extends StatelessWidget {
             ],
           ),
           TextFormField(
+            enabled: !cartManager.carregando,
             initialValue: endereco!.distrito,
             decoration: InputDecoration(
               isDense: true,
@@ -144,30 +149,37 @@ class EnderecoInputField extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          BotaoCustomizado(
-            texto: "Calcular Frete",
-            onPressed: () async {
-              if (Form.of(context)!.validate()) {
-                Form.of(context)!.save();
-                try {
-                  await context
-                      .read<GerenciadorCarrinho>()
-                      .setEndereco(endereco!);
-                } catch (erro) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("$erro"),
-                      backgroundColor: Colors.red[400],
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  );
-                }
-              }
-            },
-          ),
+          if (cartManager.carregando)
+            LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(temaPadrao.primaryColor),
+              backgroundColor: Colors.transparent,
+            ),
+          !cartManager.carregando
+              ? BotaoCustomizado(
+                  texto: "Calcular Frete",
+                  onPressed: () async {
+                    if (Form.of(context)!.validate()) {
+                      Form.of(context)!.save();
+                      try {
+                        await context
+                            .read<GerenciadorCarrinho>()
+                            .setEndereco(endereco!);
+                      } catch (erro) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("$erro"),
+                            backgroundColor: Colors.red[400],
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                )
+              : Container(),
         ],
       );
     else if (endereco!.zipCode != null)

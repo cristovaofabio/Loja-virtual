@@ -7,7 +7,12 @@ import 'package:loja_virtual/models/GerenciadorPagina.dart';
 import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
 import 'package:provider/provider.dart';
 
-class TelaBase extends StatelessWidget {
+class TelaBase extends StatefulWidget {
+  @override
+  _TelaBaseState createState() => _TelaBaseState();
+}
+
+class _TelaBaseState extends State<TelaBase> {
   //Controlar a exibição da tela:
   final PageController pageController = PageController();
 

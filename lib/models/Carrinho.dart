@@ -4,7 +4,7 @@ import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/models/TamanhoItem.dart';
 
 class Carrinho extends ChangeNotifier {
-  late String id; //Id do carrinho
+  String? id; //Id do carrinho
   late String idProduto;
   late int quantidade;
   late String tamanho;

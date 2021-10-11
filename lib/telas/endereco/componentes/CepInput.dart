@@ -8,16 +8,23 @@ import 'package:loja_virtual/telas/carrinho/componentes/IconeBotaoCustomizado.da
 import 'package:loja_virtual/util/BotaoCustomizado.dart';
 import 'package:provider/provider.dart';
 
-class CepInput extends StatelessWidget {
+class CepInput extends StatefulWidget {
   final Endereco endereco;
 
   CepInput(this.endereco);
 
+  @override
+  _CepInputState createState() => _CepInputState();
+}
+
+class _CepInputState extends State<CepInput> {
   final TextEditingController cepController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    if (endereco.zipCode == null)
+    final cartManager = context.watch<GerenciadorCarrinho>();
+
+    if (widget.endereco.zipCode == null)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -42,16 +49,34 @@ class CepInput extends StatelessWidget {
               return null;
             },
           ),
-          BotaoCustomizado(
-            texto: "Buscar CEP",
-            onPressed: () {
-              if (Form.of(context)!.validate()) {
-                context
-                    .read<GerenciadorCarrinho>()
-                    .getEndereco(cepController.text);
-              }
-            },
-          ),
+          if (cartManager.carregando)
+            LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(temaPadrao.primaryColor),
+              backgroundColor: Colors.transparent,
+            ),
+          !cartManager.carregando
+              ? BotaoCustomizado(
+                  texto: "Buscar CEP",
+                  onPressed: () async {
+                    if (Form.of(context)!.validate()) {
+                      try {
+                        await context.read<GerenciadorCarrinho>().getEndereco(cepController.text);
+                      } catch (erro) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("$erro"),
+                            backgroundColor: Colors.red[400],
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                )
+              : Container(),
         ],
       );
     else
@@ -61,7 +86,7 @@ class CepInput extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                'CEP: ${endereco.zipCode}',
+                'CEP: ${widget.endereco.zipCode}',
                 style: TextStyle(
                   color: temaPadrao.primaryColor,
                   fontWeight: FontWeight.w600,
