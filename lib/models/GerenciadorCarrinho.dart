@@ -81,6 +81,14 @@ class GerenciadorCarrinho extends ChangeNotifier {
     notifyListeners();
   }
 
+  void limpar() {
+    for(final cartProduct in itens){
+      usuario!.carrinhoReference.doc(cartProduct.id).delete();
+    }
+    itens.clear();
+    notifyListeners();
+  }
+
   void _itemAtualizado() {
     try {
       precoProdutos = 0.0;

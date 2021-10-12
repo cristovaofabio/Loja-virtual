@@ -86,6 +86,7 @@ void main() async {
             case '/base':
               return MaterialPageRoute(
                 builder: (_) => TelaBase(),
+                settings: settings,
               );
             case '/endereco':
               return MaterialPageRoute(builder: (_) => TelaEndereco());
@@ -112,6 +113,7 @@ void main() async {
             case '/carrinho':
               return MaterialPageRoute(
                 builder: (_) => TelaCarrinho(),
+                settings: settings,
               );
             case '/login':
               return MaterialPageRoute(

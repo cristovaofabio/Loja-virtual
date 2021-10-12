@@ -1,25 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
+import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/models/Produto.dart';
 
 class GerenciadorCheckOut extends ChangeNotifier {
   GerenciadorCarrinho? gerenciadorCarrinho;
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
 
+  bool _carregando = false;
+  bool get carregando => _carregando;
+  set carregando(bool value) {
+    _carregando = value;
+    notifyListeners();
+  }
+
   // ignore: use_setters_to_change_properties
   void updateCart(GerenciadorCarrinho gerenciadorCarrinho) {
     this.gerenciadorCarrinho = gerenciadorCarrinho;
   }
 
-  Future<void> checkout() async {
+  Future<void> checkout({Function? onStockFail, Function? onSuccess}) async {
+    carregando = true;
+
     try {
       await _decrementarEstoque();
     } catch (erro) {
-      debugPrint(erro.toString());
+      onStockFail!(erro);
+      carregando = false;
+      return;
     }
 
-    _getOrderId().then((value) => print(value));
+    final orderId = await _getOrderId();
+    final order = Pedido.fromCartManager(gerenciadorCarrinho!);
+    order.orderId = orderId.toString();
+
+    await order.salvar();
+
+    gerenciadorCarrinho!.limpar();
+
+    onSuccess!();
+    carregando = false;
   }
 
   Future<int> _getOrderId() async {
@@ -51,9 +72,11 @@ class GerenciadorCheckOut extends ChangeNotifier {
         Produto produto;
 
         if (produtosParaAtualizar.any((p) => p.id == cartProduct.idProduto)) {
-          produto = produtosParaAtualizar.firstWhere((p) => p.id == cartProduct.idProduto);
+          produto = produtosParaAtualizar
+              .firstWhere((p) => p.id == cartProduct.idProduto);
         } else {
-          final doc = await tx.get(bancoDados.doc('produtos/${cartProduct.idProduto}'));
+          final doc =
+              await tx.get(bancoDados.doc('produtos/${cartProduct.idProduto}'));
           produto = Produto.fromDocumentSnapshot(doc);
         }
 

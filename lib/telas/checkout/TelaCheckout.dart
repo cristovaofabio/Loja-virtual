@@ -5,6 +5,8 @@ import 'package:loja_virtual/models/GerenciadorCheckOut.dart';
 import 'package:provider/provider.dart';
 
 class TelaCheckout extends StatelessWidget {
+  final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProxyProvider<GerenciadorCarrinho,
@@ -14,22 +16,52 @@ class TelaCheckout extends StatelessWidget {
           checkoutManager!..updateCart(cartManager),
       lazy: false,
       child: Scaffold(
+        key: key,
         appBar: AppBar(
           title: Text('Pagamento'),
           centerTitle: true,
         ),
         body: Consumer<GerenciadorCheckOut>(
           builder: (_, gerenciadorCheckOut, __) {
-            return ListView(
-              children: <Widget>[
-                PrecoCarrinho(
-                  textoBotao: 'Finalizar Pedido',
-                  onPressed: () {
-                    gerenciadorCheckOut.checkout();
-                  },
+            if (gerenciadorCheckOut.carregando) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      'Processando seu pagamento...',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16),
+                    )
+                  ],
                 ),
-              ],
-            );
+              );
+            } else {
+              return ListView(
+                children: <Widget>[
+                  PrecoCarrinho(
+                    textoBotao: 'Finalizar Pedido',
+                    onPressed: () {
+                      gerenciadorCheckOut.checkout(onStockFail: (e) {
+                        Navigator.of(context).popUntil(
+                            (route) => route.settings.name == '/carrinho');
+                      }, onSuccess: () {
+                        Navigator.of(context).popUntil(
+                            (route) => route.settings.name == '/base');
+                      });
+                    },
+                  ),
+                ],
+              );
+            }
           },
         ),
       ),

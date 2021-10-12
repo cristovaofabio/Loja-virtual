@@ -8,7 +8,14 @@ class Carrinho extends ChangeNotifier {
   late String idProduto;
   late int quantidade;
   late String tamanho;
-  Produto? produto;
+  Produto? _produto;
+  num? precoFixo;
+
+  Produto? get produto => _produto;
+  set produto(Produto? value){
+     _produto = value;
+    notifyListeners();
+  }
 
   FirebaseFirestore bancoDados = FirebaseFirestore.instance;
 
@@ -61,10 +68,10 @@ class Carrinho extends ChangeNotifier {
     notifyListeners();
   }
 
-  Carrinho.fromProduto(this.produto) {
-    this.idProduto = this.produto!.id!;
+  Carrinho.fromProduto(this._produto) {
+    this.idProduto = produto!.id!;
     this.quantidade = 1;
-    this.tamanho = this.produto!.tamanhoSelecionado.nome!;
+    this.tamanho = produto!.tamanhoSelecionado.nome!;
   }
 
   Carrinho.fromDocument(DocumentSnapshot document) {
@@ -76,7 +83,15 @@ class Carrinho extends ChangeNotifier {
     bancoDados.doc('produtos/${this.idProduto}').get().then(
       (doc) {
         produto = Produto.fromDocumentSnapshot(doc);
-        notifyListeners();
     });
+  }
+
+  Map<String, dynamic> toOrderItemMap(){
+    return {
+      'idProduto'   : idProduto,
+      'quantidade'  : quantidade,
+      'tamanho'     : tamanho,
+      'precoFixo'   : precoFixo ?? precoUnitario,
+    };
   }
 }
