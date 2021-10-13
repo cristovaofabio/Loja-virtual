@@ -4,6 +4,7 @@ import 'package:loja_virtual/telas/administrador/TelaUsuarioAdministrador.dart';
 import 'package:loja_virtual/telas/home/Home.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorPagina.dart';
+import 'package:loja_virtual/telas/pedidos/TelaPedidos.dart';
 import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
 import 'package:provider/provider.dart';
 
@@ -30,12 +31,7 @@ class _TelaBaseState extends State<TelaBase> {
             children: <Widget>[
               Home(),
               TelaProdutos(),
-              Scaffold(
-                drawer: DrawerCustomizado(),
-                appBar: AppBar(
-                  title: Text("Meus produtos"),
-                ),
-              ),
+              TelaPedidos(),
               Scaffold(
                 drawer: DrawerCustomizado(),
                 appBar: AppBar(

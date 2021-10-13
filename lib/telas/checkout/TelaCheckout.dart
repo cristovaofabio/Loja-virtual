@@ -5,7 +5,7 @@ import 'package:loja_virtual/models/GerenciadorCheckOut.dart';
 import 'package:provider/provider.dart';
 
 class TelaCheckout extends StatelessWidget {
-  final GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class TelaCheckout extends StatelessWidget {
           checkoutManager!..updateCart(cartManager),
       lazy: false,
       child: Scaffold(
-        key: key,
+        key: scaffoldKey,
         appBar: AppBar(
           title: Text('Pagamento'),
           centerTitle: true,

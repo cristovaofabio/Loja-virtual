@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
+import 'package:loja_virtual/models/GerenciadorPedidos.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
@@ -66,6 +67,12 @@ void main() async {
           lazy: false,
           update: (_, gerenciadorUsuario, gerenciadorCarrinho) =>
               gerenciadorCarrinho!..atualizarUsuario(gerenciadorUsuario),
+        ),
+        ChangeNotifierProxyProvider<GerenciadorUsuarios, GerenciadorPedidos>(
+          create: (_) => GerenciadorPedidos(),
+          lazy: false,
+          update: (_, userManager, gerenciadorPedidos) =>
+              gerenciadorPedidos!..atualizarUsuario(userManager.usuarioAtual),
         ),
         ChangeNotifierProxyProvider<GerenciadorUsuarios,
             GerenciadorUsuariosAdministradores>(

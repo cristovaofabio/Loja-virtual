@@ -12,8 +12,8 @@ class Carrinho extends ChangeNotifier {
   num? precoFixo;
 
   Produto? get produto => _produto;
-  set produto(Produto? value){
-     _produto = value;
+  set produto(Produto? value) {
+    _produto = value;
     notifyListeners();
   }
 
@@ -74,24 +74,34 @@ class Carrinho extends ChangeNotifier {
     this.tamanho = produto!.tamanhoSelecionado.nome!;
   }
 
+  Carrinho.fromMap(Map<String, dynamic> map) {
+    idProduto = map['idProduto'] as String;
+    quantidade = map['quantidade'] as int;
+    tamanho = map['tamanho'] as String;
+    precoFixo = map['precoFixo'] as num;
+
+    bancoDados.doc('produtos/$idProduto').get().then((doc) {
+      produto = Produto.fromDocumentSnapshot(doc);
+    });
+  }
+
   Carrinho.fromDocument(DocumentSnapshot document) {
     this.id = document.id;
     this.idProduto = document['idProduto'] as String;
     this.quantidade = document['quantidade'] as int;
     this.tamanho = document['tamanho'] as String;
 
-    bancoDados.doc('produtos/${this.idProduto}').get().then(
-      (doc) {
-        produto = Produto.fromDocumentSnapshot(doc);
+    bancoDados.doc('produtos/${this.idProduto}').get().then((doc) {
+      produto = Produto.fromDocumentSnapshot(doc);
     });
   }
 
-  Map<String, dynamic> toOrderItemMap(){
+  Map<String, dynamic> toOrderItemMap() {
     return {
-      'idProduto'   : idProduto,
-      'quantidade'  : quantidade,
-      'tamanho'     : tamanho,
-      'precoFixo'   : precoFixo ?? precoUnitario,
+      'idProduto': idProduto,
+      'quantidade': quantidade,
+      'tamanho': tamanho,
+      'precoFixo': precoFixo ?? precoUnitario,
     };
   }
 }
