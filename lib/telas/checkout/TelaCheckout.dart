@@ -53,9 +53,11 @@ class TelaCheckout extends StatelessWidget {
                       gerenciadorCheckOut.checkout(onStockFail: (e) {
                         Navigator.of(context).popUntil(
                             (route) => route.settings.name == '/carrinho');
-                      }, onSuccess: () {
+                      }, onSuccess: (pedido) {
                         Navigator.of(context).popUntil(
                             (route) => route.settings.name == '/base');
+                        Navigator.of(context)
+                            .pushNamed('/confirmacao', arguments: pedido);
                       });
                     },
                   ),

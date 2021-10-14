@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/Pedido.dart';
+import 'package:loja_virtual/telas/carrinho/componentes/ItemProdutoPedido.dart';
 
 class ItemPedido extends StatelessWidget {
   const ItemPedido(this.pedido);
@@ -12,7 +13,7 @@ class ItemPedido extends StatelessWidget {
     final primaryColor = temaPadrao.primaryColor;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ExpansionTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,13 +41,19 @@ class ItemPedido extends StatelessWidget {
             Text(
               'Em transporte',
               style: TextStyle(
-                fontWeight: FontWeight.w400,
-                color: primaryColor,
-                fontSize: 14
-              ),
+                  fontWeight: FontWeight.w400,
+                  color: primaryColor,
+                  fontSize: 14),
             )
           ],
         ),
+        children: <Widget>[
+          Column(
+            children: pedido.itens!.map((e) {
+              return ItemProdutoPedido(e);
+            }).toList(),
+          )
+        ],
       ),
     );
   }

@@ -9,11 +9,13 @@ import 'package:loja_virtual/models/GerenciadorPedidos.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
+import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/models/Produto.dart';
 import 'package:loja_virtual/telas/base/TelaBase.dart';
 import 'package:loja_virtual/telas/cadastro/TelaCadastro.dart';
 import 'package:loja_virtual/telas/carrinho/TelaCarrinho.dart';
 import 'package:loja_virtual/telas/checkout/TelaCheckout.dart';
+import 'package:loja_virtual/telas/confirmacao/TelaConfirmacao.dart';
 import 'package:loja_virtual/telas/endereco/TelaEndereco.dart';
 import 'package:loja_virtual/telas/login/TelaLogin.dart';
 import 'package:loja_virtual/telas/produtos/TelaEditarProduto.dart';
@@ -90,6 +92,10 @@ void main() async {
         initialRoute: '/base',
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case '/confirmacao':
+              return MaterialPageRoute(
+                  builder: (_) =>
+                      TelaConfirmacao(settings.arguments as Pedido));
             case '/base':
               return MaterialPageRoute(
                 builder: (_) => TelaBase(),

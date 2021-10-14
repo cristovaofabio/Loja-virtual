@@ -39,7 +39,7 @@ class GerenciadorCheckOut extends ChangeNotifier {
 
     gerenciadorCarrinho!.limpar();
 
-    onSuccess!();
+    onSuccess!(order);
     carregando = false;
   }
 
