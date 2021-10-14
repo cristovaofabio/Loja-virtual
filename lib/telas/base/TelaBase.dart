@@ -5,6 +5,7 @@ import 'package:loja_virtual/telas/home/Home.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorPagina.dart';
 import 'package:loja_virtual/telas/pedidos/TelaPedidos.dart';
+import 'package:loja_virtual/telas/pedidos_admin/TelaPedidosAdmin.dart';
 import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
 import 'package:provider/provider.dart';
 
@@ -41,12 +42,7 @@ class _TelaBaseState extends State<TelaBase> {
               //Se o usuário for administrador, adicionar novos elementos à lista:
               if (gerenciadorUsuarios.adminHabilitado) ...[
                 TelaUsuarioAdministrador(),
-                Scaffold(
-                  drawer: DrawerCustomizado(),
-                  appBar: AppBar(
-                    title: Text("Pedidos"),
-                  ),
-                ),
+                TelaPedidosAdmin(),
               ]
             ],
           );

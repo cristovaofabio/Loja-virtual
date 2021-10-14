@@ -39,10 +39,12 @@ class ItemPedido extends StatelessWidget {
               ],
             ),
             Text(
-              'Em transporte',
+              pedido.statusText,
               style: TextStyle(
                   fontWeight: FontWeight.w400,
-                  color: primaryColor,
+                  color: pedido.status == Status.cancelado
+                      ? Colors.red
+                      : primaryColor,
                   fontSize: 14),
             )
           ],

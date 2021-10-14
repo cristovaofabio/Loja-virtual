@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
 import 'package:loja_virtual/models/GerenciadorPedidos.dart';
+import 'package:loja_virtual/models/GerenciadorPedidosAdmin.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
@@ -84,6 +85,13 @@ void main() async {
               (_, gerenciadorUsuarios, gerenciadorUsuariosAdministradores) =>
                   gerenciadorUsuariosAdministradores!
                     ..atualizarUsuario(gerenciadorUsuarios),
+        ),
+        ChangeNotifierProxyProvider<GerenciadorUsuarios,
+            GerenciadorPedidosAdmin>(
+          create: (_) => GerenciadorPedidosAdmin(),
+          lazy: false,
+          update: (_, userManager, adminOrdersManager) => adminOrdersManager!
+            ..atualizarAdmin(adminEnabled: userManager.adminHabilitado),
         )
       ],
       child: MaterialApp(
@@ -143,24 +151,3 @@ void main() async {
     ),
   );
 }
-
-  /* //Gera um id aleatório
-  FirebaseFirestore.instance
-    .collection("pedidos")
-    .add(
-      {
-        "preco":199.99,
-        "produto" : "Curso de aperfeiçoamento"
-      }
-    );
-
-    //Eu gero o meu próprio id:
-    FirebaseFirestore.instance
-    .collection("clientes")
-    .doc("007")
-    .set(
-      {
-        "nome": "James",
-        "sobrenome" : "Bond"
-      }
-    ); */
