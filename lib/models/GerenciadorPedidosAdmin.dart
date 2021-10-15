@@ -8,9 +8,10 @@ import 'package:loja_virtual/models/Usuario.dart';
 class GerenciadorPedidosAdmin extends ChangeNotifier {
   
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  List<Pedido> _orders = [];
+  final List<Pedido> _orders = [];
   StreamSubscription? _subscription;
   Usuario? filtrosUsuario;
+  List<Status> filtroStatus = [Status.preparando];
 
   void atualizarAdmin({bool? adminEnabled}){
     _orders.clear();
@@ -28,7 +29,7 @@ class GerenciadorPedidosAdmin extends ChangeNotifier {
       output = output.where((o) => o.userId == filtrosUsuario!.idUsuario).toList();
     }
 
-    return output;
+    return output.where((o) => filtroStatus.contains(o.status)).toList();
   }
 
   void _listenToOrders(){
@@ -57,6 +58,15 @@ class GerenciadorPedidosAdmin extends ChangeNotifier {
 
   void setFiltrosUsuario(Usuario? user){
     filtrosUsuario = user;
+    notifyListeners();
+  }
+
+  void setfiltroStatus({required Status status, required bool enabled}){
+    if(enabled){
+      filtroStatus.add(status);
+    } else {
+      filtroStatus.remove(status);
+    }
     notifyListeners();
   }
 

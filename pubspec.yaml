@@ -44,6 +44,7 @@ dependencies:
   http: ^0.13.3 #requisicoes http client
   brasil_fields: ^1.2.0 #padroes e formatos brasileiros
   geolocator: ^7.4.0 #servicos especificos de localizacao
+  sliding_up_panel: ^2.0.0+1 #painel deslizante para cima
 
 dev_dependencies:
   flutter_test:
