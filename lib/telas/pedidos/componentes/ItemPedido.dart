@@ -4,9 +4,10 @@ import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/telas/carrinho/componentes/ItemProdutoPedido.dart';
 
 class ItemPedido extends StatelessWidget {
-  const ItemPedido(this.pedido);
+  const ItemPedido(this.pedido, {this.showControls = false});
 
   final Pedido pedido;
+  final bool showControls;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,42 @@ class ItemPedido extends StatelessWidget {
             children: pedido.itens!.map((e) {
               return ItemProdutoPedido(e);
             }).toList(),
-          )
+          ),
+          if (showControls && pedido.status != Status.cancelado)
+            SizedBox(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: pedido.cancelar,
+                    child: Text(
+                      'Cancelar',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: pedido.voltar,
+                    child: Text(
+                      'Recuar',
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: pedido.avancar,
+                    child: Text(
+                      'Avançar',
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: (){},
+                    child: Text(
+                      'Endereço',
+                      style: TextStyle(color: temaPadrao.primaryColor),
+                    ),
+                  ),
+                ],
+              ),
+            )
         ],
       ),
     );

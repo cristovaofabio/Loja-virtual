@@ -57,15 +57,45 @@ class Pedido {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  DocumentReference get firestoreRef =>
+    firestore.collection('orders').doc(orderId);
+
+  void updateFromDocument(DocumentSnapshot doc){
+    status = Status.values[doc['status'] as int];
+  }
+
   Future<void> salvar() async {
     firestore.collection('orders').doc(orderId).set({
-      'itens'   : itens!.map((e) => e.toOrderItemMap()).toList(),
-      'preco'   : preco,
-      'usuario' : userId,
+      'itens': itens!.map((e) => e.toOrderItemMap()).toList(),
+      'preco': preco,
+      'usuario': userId,
       'endereco': endereco!.toMap(),
-      'status'  : status.index,
-      'date'    : Timestamp.now(),
+      'status': status.index,
+      'date': Timestamp.now(),
     });
+  }
+
+  Function() get voltar {
+    return status.index >= Status.transportando.index
+        ? () {
+            status = Status.values[status.index - 1];
+            firestoreRef.update({'status': status.index});
+          }
+        : () {};
+  }
+
+  Function() get avancar {
+    return status.index <= Status.transportando.index
+        ? () {
+            status = Status.values[status.index + 1];
+            firestoreRef.update({'status': status.index});
+          }
+        : () {};
+  }
+
+  void cancelar(){
+    status = Status.cancelado;
+    firestoreRef.update({'status': status.index});
   }
 
   @override

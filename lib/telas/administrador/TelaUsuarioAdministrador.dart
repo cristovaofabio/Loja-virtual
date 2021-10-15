@@ -1,6 +1,8 @@
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
+import 'package:loja_virtual/models/GerenciadorPagina.dart';
+import 'package:loja_virtual/models/GerenciadorPedidosAdmin.dart';
 import 'package:loja_virtual/models/GerenciadorUsuariosAdministradores.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +34,12 @@ class TelaUsuarioAdministrador extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                onTap: (){
+                  context.read<GerenciadorPedidosAdmin>().setFiltrosUsuario(
+                    gerenciadorUsuariosAdministradores.usuarios[index]
+                  );
+                  context.read<GerenciadorPagina>().mostrarPagina(5);
+                },
               );
             },
             highlightTextStyle: TextStyle(
