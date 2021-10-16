@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/main.dart';
 import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/telas/carrinho/componentes/ItemProdutoPedido.dart';
+import 'package:loja_virtual/telas/pedidos/componentes/CancelarPedidoAlert.dart';
+import 'package:loja_virtual/telas/pedidos/componentes/ExportarEnderecoAlert.dart';
 
 class ItemPedido extends StatelessWidget {
   const ItemPedido(this.pedido, {this.showControls = false});
@@ -63,7 +65,11 @@ class ItemPedido extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 children: <Widget>[
                   TextButton(
-                    onPressed: pedido.cancelar,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) => CancelarPedidoAlert(pedido));
+                    },
                     child: Text(
                       'Cancelar',
                       style: TextStyle(color: Colors.red),
@@ -82,7 +88,12 @@ class ItemPedido extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: (){},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (_) =>
+                              ExportarEnderecoAlert(pedido.endereco!));
+                    },
                     child: Text(
                       'Endereço',
                       style: TextStyle(color: temaPadrao.primaryColor),

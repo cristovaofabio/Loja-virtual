@@ -45,6 +45,8 @@ dependencies:
   brasil_fields: ^1.2.0 #padroes e formatos brasileiros
   geolocator: ^7.4.0 #servicos especificos de localizacao
   sliding_up_panel: ^2.0.0+1 #painel deslizante para cima
+  screenshot: ^1.2.3 #capturar widget como imagem
+  gallery_saver: ^2.3.1 #salvar imagens ou videos na galeria
 
 dev_dependencies:
   flutter_test:

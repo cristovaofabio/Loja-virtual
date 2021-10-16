@@ -42,7 +42,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Acessar galeria para buscar imagem</string>
+    <string>Acessar galeria de fotos</string>
     <key>NSCameraUsageDescription</key>
     <string>Acessar camera para adicionar imagem</string>
     <key>NSMicrophoneUsageDescription</key>

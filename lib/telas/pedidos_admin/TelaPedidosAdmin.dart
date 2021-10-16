@@ -9,7 +9,12 @@ import 'package:loja_virtual/telas/pedidos/componentes/ItemPedido.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-class TelaPedidosAdmin extends StatelessWidget {
+class TelaPedidosAdmin extends StatefulWidget {
+  @override
+  _TelaPedidosAdminState createState() => _TelaPedidosAdminState();
+}
+
+class _TelaPedidosAdminState extends State<TelaPedidosAdmin> {
   final PanelController panelController = PanelController();
 
   @override
