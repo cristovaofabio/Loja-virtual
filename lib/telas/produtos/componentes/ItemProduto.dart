@@ -14,6 +14,7 @@ class ItemProduto extends StatelessWidget {
         Navigator.of(context).pushNamed("/produto", arguments: produto);
       },
       child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         child: Container(
           height: 100,
@@ -72,7 +73,18 @@ class ItemProduto extends StatelessWidget {
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: temaPadrao.primaryColor),
-                    )
+                    ),
+                    if (!produto.temEstoque)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: Text(
+                          'Sem estoque',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               )

@@ -97,14 +97,13 @@ void main() async {
       child: MaterialApp(
         theme: temaPadrao,
         title: 'Loja do Cristóvão',
-        initialRoute: '/base',
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/confirmacao':
               return MaterialPageRoute(
                   builder: (_) =>
                       TelaConfirmacao(settings.arguments as Pedido));
-            case '/base':
+            case '/':
               return MaterialPageRoute(
                 builder: (_) => TelaBase(),
                 settings: settings,

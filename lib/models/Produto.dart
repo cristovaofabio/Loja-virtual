@@ -18,7 +18,7 @@ class Produto extends ChangeNotifier {
   List<String>? imagens;
   List<TamanhoItem>? tamanhos;
   List<dynamic>? novasImagens;
-
+  bool? deletado;
   bool _carregando = false;
   bool get carregando => _carregando;
   set carregando(bool value){
@@ -26,7 +26,7 @@ class Produto extends ChangeNotifier {
     notifyListeners();
   }
 
-  Produto({this.id, this.nome, this.descricao, this.imagens, this.tamanhos}) {
+  Produto({this.id, this.nome, this.descricao, this.imagens, this.tamanhos,this.deletado = false}) {
     imagens = imagens ?? [];
     tamanhos = tamanhos ?? [];
   }
@@ -44,6 +44,7 @@ class Produto extends ChangeNotifier {
       'nome': nome,
       'descricao': descricao,
       'tamanhos': exportTamanhoList(), //lista de maps
+      'deletado': deletado,
     };
 
     if (id == null) {
@@ -97,6 +98,9 @@ class Produto extends ChangeNotifier {
     }
   }
   
+  void delete(){
+    bancoDados.doc('produtos/$id').update({'deletado': true});
+  }
 
   Produto clone() {
     return Produto(
@@ -105,6 +109,7 @@ class Produto extends ChangeNotifier {
       descricao: descricao,
       imagens: List.from(imagens!),
       tamanhos: tamanhos!.map((size) => size.clone()).toList(),
+      deletado: deletado,
     );
   }
 
@@ -123,13 +128,13 @@ class Produto extends ChangeNotifier {
   }
 
   bool get temEstoque {
-    return totalEstoque > 0;
+    return (totalEstoque > 0 && (deletado==false));
   }
 
   num get precoBase {
     num menor = double.infinity;
     for (final tamanho in tamanhos!) {
-      if (tamanho.preco! < menor && tamanho.hasStock) menor = tamanho.preco!;
+      if (tamanho.preco! < menor ) menor = tamanho.preco!;
     }
     return menor;
   }
@@ -151,6 +156,14 @@ class Produto extends ChangeNotifier {
     this.nome = documentSnapshot["nome"];
     this.descricao = documentSnapshot["descricao"];
     this.imagens = List<String>.from(documentSnapshot["imagens"]);
+    this.deletado = (documentSnapshot['deletado'] ?? false) as bool;
+    /* Map<String, dynamic> dataMap = documentSnapshot.data() as Map<String, dynamic>;
+    if(dataMap.containsKey('deletado')){
+      this.deletado = (documentSnapshot['deletado']) as bool;
+    } else{
+      this.deletado = false;
+    }
+    */
     this.tamanhos = (documentSnapshot["tamanhos"] as List<dynamic>)
         .map((s) => TamanhoItem.fromMap(s as Map<String, dynamic>))
         .toList();

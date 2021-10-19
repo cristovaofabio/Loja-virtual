@@ -25,7 +25,8 @@ class TelaProduto extends StatelessWidget {
           actions: <Widget>[
             Consumer<GerenciadorUsuarios>(
               builder: (_, gerenciadorUsuarios, __) {
-                if (gerenciadorUsuarios.adminHabilitado) {
+                if (gerenciadorUsuarios.adminHabilitado &&
+                    (produto.deletado == false)) {
                   return IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
@@ -96,22 +97,35 @@ class TelaProduto extends StatelessWidget {
                     produto.descricao!,
                     style: TextStyle(fontSize: 16),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 8),
-                    child: Text(
-                      'Tamanhos',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  if (produto.deletado!)
+                    Padding(
+                      padding: EdgeInsets.only(top: 16, bottom: 8),
+                      child: Text(
+                        'Este produto não está mais disponível',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.red),
+                      ),
+                    )
+                  else ...[
+                    Padding(
+                      padding: EdgeInsets.only(top: 16, bottom: 8),
+                      child: Text(
+                        'Tamanhos',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
                     ),
-                  ),
-                  //Permite colocar um ítem abaixo do outro, até que não seja mais possível:
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8, //Espaçamento entre linhas
-                    children: produto.tamanhos!.map((e) {
-                      return TamanhoWidget(e);
-                    }).toList(),
-                  ),
+                    //Permite colocar um ítem abaixo do outro, até que não seja mais possível:
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8, //Espaçamento entre linhas
+                      children: produto.tamanhos!.map((e) {
+                        return TamanhoWidget(e);
+                      }).toList(),
+                    ),
+                  ],
                   SizedBox(
                     height: 20,
                   ),

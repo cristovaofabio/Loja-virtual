@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/telas/administrador/TelaUsuarioAdministrador.dart';
 import 'package:loja_virtual/telas/home/Home.dart';
@@ -17,6 +18,13 @@ class TelaBase extends StatefulWidget {
 class _TelaBaseState extends State<TelaBase> {
   //Controlar a exibição da tela:
   final PageController pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    //A tela do app sempre irá se manter na vertical
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
 
   @override
   Widget build(BuildContext context) {

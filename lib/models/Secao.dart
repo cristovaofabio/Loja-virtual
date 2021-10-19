@@ -93,7 +93,7 @@ class Secao extends ChangeNotifier {
       //As imagens adicionadas recentimente ficarão por último
       if ((item.imagem is String) == false) {
         houveAtualizacao = true;
-        
+
         Reference arquivo = storageRef.child(Uuid().v1());
         //Fazer o upload da imagem:
         UploadTask task = arquivo.putFile(item.imagem as File);
@@ -134,7 +134,8 @@ class Secao extends ChangeNotifier {
     }
 
     for (final original in originalItens) {
-      if (itens.contains(original) == false) {
+      if (itens.contains(original) == false &&
+          (original.imagem as String).contains('firebase')) {
         try {
           final ref = storage.refFromURL(original.imagem.toString());
           await ref.delete();
@@ -152,11 +153,13 @@ class Secao extends ChangeNotifier {
   Future<void> delete() async {
     await bancoDados.doc('home/$id').delete();
     for (final item in itens) {
-      try {
-        final ref = storage.refFromURL(item.imagem as String);
-        await ref.delete();
-        // ignore: empty_catches
-      } catch (e) {}
+      if ((item.imagem as String).contains('firebase')) {
+        try {
+          final ref = storage.refFromURL(item.imagem as String);
+          await ref.delete();
+          // ignore: empty_catches
+        } catch (e) {}
+      }
     }
   }
 

@@ -25,6 +25,16 @@ class TelaEditarProduto extends StatelessWidget {
         appBar: AppBar(
           title: Text(editando ? 'Editar Produto' : 'Criar Produto'),
           centerTitle: true,
+          actions: <Widget>[
+            if (editando)
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  context.read<GerenciadorProdutos>().delete(produto);
+                  Navigator.of(context).pop();
+                },
+              )
+          ],
         ),
         backgroundColor: Colors.white,
         body: Form(
@@ -108,11 +118,12 @@ class TelaEditarProduto extends StatelessWidget {
                                   if (_chave.currentState!.validate()) {
                                     _chave.currentState!.save();
 
-                                    await this.produto.save().then((value){
-                                      context.read<GerenciadorProdutos>().atualizar(this.produto);
+                                    await this.produto.save().then((value) {
+                                      context
+                                          .read<GerenciadorProdutos>()
+                                          .atualizar(this.produto);
                                       Navigator.of(context).pop();
-                                    } );
-
+                                    });
                                   }
                                 },
                               ),

@@ -99,7 +99,6 @@ class TelaProdutos extends StatelessWidget {
           return ListView.builder(
             itemCount: produtosFiltrados.length,
             itemBuilder: (_, indice) {
-              print("-----Produto: "+produtosFiltrados[indice].toString());
               return ItemProduto(produto: produtosFiltrados[indice]);
             },
           );

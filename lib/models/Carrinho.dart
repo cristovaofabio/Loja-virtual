@@ -46,6 +46,9 @@ class Carrinho extends ChangeNotifier {
   }
 
   bool get temEstoque {
+    if(produto != null && produto!.deletado!) {
+      return false;
+    }
     final size = itemTamanho;
     if (size.nome!.isEmpty) {
       return false;

@@ -55,7 +55,7 @@ class TelaCheckout extends StatelessWidget {
                             (route) => route.settings.name == '/carrinho');
                       }, onSuccess: (pedido) {
                         Navigator.of(context).popUntil(
-                            (route) => route.settings.name == '/base');
+                            (route) => route.settings.name == '/');
                         Navigator.of(context)
                             .pushNamed('/confirmacao', arguments: pedido);
                       });

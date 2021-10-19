@@ -25,8 +25,8 @@ class GerenciadorProdutos extends ChangeNotifier {
       //Casa a pesquisa esteja vazia, mostre todos os produtos:
       filteredProducts.addAll(todosProdutos);
     } else {
-      filteredProducts.addAll(todosProdutos
-          .where((p) => p.nome!.toLowerCase().contains(pesquisa.toLowerCase())));
+      filteredProducts.addAll(todosProdutos.where(
+          (p) => p.nome!.toLowerCase().contains(pesquisa.toLowerCase())));
     }
     return filteredProducts;
   }
@@ -37,8 +37,10 @@ class GerenciadorProdutos extends ChangeNotifier {
 
   Future<void> _carregarTodosProdutos() async {
     try {
-      final QuerySnapshot snapProducts =
-          await bancoDados.collection("produtos").get();
+      final QuerySnapshot snapProducts = await bancoDados
+          .collection("produtos")
+          .where('deletado', isEqualTo: false)
+          .get();
 
       todosProdutos = snapProducts.docs
           .map((d) => Produto.fromDocumentSnapshot(d))
@@ -53,20 +55,25 @@ class GerenciadorProdutos extends ChangeNotifier {
   Produto? encontrarProdutoPorId(String id) {
     Produto produtoEncontrado = Produto();
     try {
-      produtoEncontrado = todosProdutos.firstWhere((produto) => produto.id == id);
+      produtoEncontrado =
+          todosProdutos.firstWhere((produto) => produto.id == id);
       return produtoEncontrado;
     } catch (e) {
       return null;
     }
   }
 
-  void atualizar(Produto? produto){
-    try{
+  void atualizar(Produto? produto) {
+    try {
       todosProdutos.removeWhere((p) => p.id == produto!.id);
-    }catch(erro){
-
-    }
+    } catch (erro) {}
     todosProdutos.add(produto!);
+    notifyListeners();
+  }
+
+  void delete(Produto produto) {
+    produto.delete();
+    todosProdutos.removeWhere((p) => p.id == produto.id);
     notifyListeners();
   }
 }
