@@ -6,14 +6,17 @@ import 'package:loja_virtual/models/Usuario.dart';
 import 'package:loja_virtual/util/BotaoCustomizado.dart';
 import 'package:loja_virtual/util/InputCustomizado.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class TelaLogin extends StatelessWidget {
   final _chave = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final Usuario _usuario = Usuario();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text("Entrar"),
         centerTitle: true,
@@ -39,7 +42,16 @@ class TelaLogin extends StatelessWidget {
           child: Form(
             key: _chave,
             child: Consumer<GerenciadorUsuarios>(
-              builder: (_, gerenciadorUsuarios, __) {
+              builder: (_, gerenciadorUsuarios, child) {
+                if (gerenciadorUsuarios.carregandoFace) {
+                  return Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation(temaPadrao.primaryColor),
+                    ),
+                  );
+                }
                 return ListView(
                   padding: EdgeInsets.all(10),
                   shrinkWrap: true, //A lista irá ocupar a menor altura possível
@@ -124,6 +136,26 @@ class TelaLogin extends StatelessWidget {
                               }
                             },
                           ),
+                    SignInButton(
+                      Buttons.FacebookNew,
+                      text: "Entrar com o Facebook",
+                      onPressed: () {
+                        gerenciadorUsuarios.loginFacebook(onFail: (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("$e"),
+                              backgroundColor: Colors.red,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          );
+                        }, onSuccess: () {
+                          Navigator.of(context).pop();
+                        });
+                      },
+                    ),
                   ],
                 );
               },

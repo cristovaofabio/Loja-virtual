@@ -1,25 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:loja_virtual/helper/FirebaseErros.dart';
 import 'package:loja_virtual/models/Usuario.dart';
 
 class GerenciadorUsuarios extends ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
-  bool carregando = false;
   Usuario usuarioAtual = Usuario();
 
   GerenciadorUsuarios() {
-    usuarioAtual.nome="";
+    usuarioAtual.nome = "";
     _carregarUsuarioAtual();
+  }
+
+  bool _carregando = false;
+  bool get carregando => _carregando;
+  set carregando(bool value){
+    _carregando = value;
+    notifyListeners();
+  }
+
+  bool _carregandoFace = false;
+  bool get carregandoFace => _carregandoFace;
+  set carregandoFace(bool value){
+    _carregandoFace = value;
+    notifyListeners();
   }
 
   Future<void> entrar(
       {required Usuario usuario,
       required Function fracasso,
       required Function sucesso}) async {
-    setCarregando(true);
+
+    carregando = true;
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: usuario.email,
@@ -34,7 +49,42 @@ class GerenciadorUsuarios extends ChangeNotifier {
       //Usuário não existente:
       //[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.
     }
-    setCarregando(false);
+    carregando = false;
+  }
+
+  Future<void> loginFacebook({Function? onFail, Function? onSuccess}) async {
+    carregandoFace = true;
+
+    final result = await FacebookLogin().logIn(['email', 'public_profile']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final credential =
+            FacebookAuthProvider.credential(result.accessToken.token);
+
+        final authResult = await auth.signInWithCredential(credential);
+
+        if (authResult.user != null) {
+          final firebaseUser = authResult.user;
+
+          usuarioAtual = Usuario();
+          usuarioAtual.idUsuario = firebaseUser!.uid;
+          usuarioAtual.nome = firebaseUser.displayName!;
+          usuarioAtual.email = firebaseUser.email!;
+
+          await usuarioAtual.salvarDados();
+
+          onSuccess!();
+        }
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        break;
+      case FacebookLoginStatus.error:
+        onFail!(result.errorMessage);
+        break;
+    }
+
+    carregandoFace = true;
   }
 
   void sair() {
@@ -49,7 +99,7 @@ class GerenciadorUsuarios extends ChangeNotifier {
       {required Usuario usuario,
       required Function fracasso,
       required Function sucesso}) async {
-    setCarregando(true);
+    carregando = true;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: usuario.email, password: usuario.senha);
@@ -63,13 +113,10 @@ class GerenciadorUsuarios extends ChangeNotifier {
     } on FirebaseAuthException catch (erro) {
       fracasso(getErrorString(erro.code));
     }
-    setCarregando(false);
+    carregando = false;
   }
 
-  void setCarregando(bool valor) {
-    carregando = valor;
-    notifyListeners();
-  }
+
 
   Future<void> _carregarUsuarioAtual({User? user}) async {
     User? usuario;
@@ -108,5 +155,6 @@ class GerenciadorUsuarios extends ChangeNotifier {
   }
 
   //Se o nome não for vazio, então existe usuário logado:
-  bool get adminHabilitado => usuarioAtual.nome.isNotEmpty && usuarioAtual.administrador;
+  bool get adminHabilitado =>
+      usuarioAtual.nome.isNotEmpty && usuarioAtual.administrador;
 }

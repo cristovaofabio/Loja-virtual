@@ -47,6 +47,8 @@ dependencies:
   sliding_up_panel: ^2.0.0+1 #painel deslizante para cima
   screenshot: ^1.2.3 #capturar widget como imagem
   gallery_saver: ^2.3.1 #salvar imagens ou videos na galeria
+  flutter_signin_button: ^2.0.0 #botoes de login para diferentes redes sociais
+  flutter_facebook_login: ^3.0.0 #autenticacao com o facebook
 
 dev_dependencies:
   flutter_test:

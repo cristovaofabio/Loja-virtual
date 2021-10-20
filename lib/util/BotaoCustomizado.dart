@@ -19,7 +19,7 @@ class BotaoCustomizado extends StatelessWidget {
         this.texto,
         style: TextStyle(
           color: this.corTexto,
-          fontSize: 18,
+          fontSize: 16,
         ),
       ),
       style: ElevatedButton.styleFrom(
