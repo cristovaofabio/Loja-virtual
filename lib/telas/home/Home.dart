@@ -25,8 +25,8 @@ class _HomeState extends State<Home> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color(0xFF81C784),
-                  Color(0xFFC8E6C9),
+                  Color(0xFF303030),
+                  Colors.grey,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,

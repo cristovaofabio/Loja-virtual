@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorHome.dart';
+import 'package:loja_virtual/models/GerenciadorLojas.dart';
 import 'package:loja_virtual/models/GerenciadorPedidos.dart';
 import 'package:loja_virtual/models/GerenciadorPedidosAdmin.dart';
 import 'package:loja_virtual/models/GerenciadorProdutos.dart';
@@ -25,8 +26,8 @@ import 'package:loja_virtual/telas/produtos/TelaProdutoSelecionado.dart';
 import 'package:provider/provider.dart';
 
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Colors.green,
-  scaffoldBackgroundColor: Colors.green[400],
+  primaryColor: Colors.black,
+  scaffoldBackgroundColor: Colors.black38,
   appBarTheme: AppBarTheme(
     elevation: 0,
   ),
@@ -63,6 +64,9 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => GerenciadorHome(),
           lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => GerenciadorLojas(),
         ),
         //Sempre que o ítem 1 sofrer alguma modificação, o ítem 2 é altualizado:
         ChangeNotifierProxyProvider<GerenciadorUsuarios, GerenciadorCarrinho>(

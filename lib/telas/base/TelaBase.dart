@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:loja_virtual/models/GerenciadorUsuarios.dart';
 import 'package:loja_virtual/telas/administrador/TelaUsuarioAdministrador.dart';
 import 'package:loja_virtual/telas/home/Home.dart';
-import 'package:loja_virtual/comum/drawer_comum/DrawerCustomizado.dart';
 import 'package:loja_virtual/models/GerenciadorPagina.dart';
+import 'package:loja_virtual/telas/lojas/TelaLojas.dart';
 import 'package:loja_virtual/telas/pedidos/TelaPedidos.dart';
 import 'package:loja_virtual/telas/pedidos_admin/TelaPedidosAdmin.dart';
 import 'package:loja_virtual/telas/produtos/TelaProdutos.dart';
@@ -41,12 +41,7 @@ class _TelaBaseState extends State<TelaBase> {
               Home(),
               TelaProdutos(),
               TelaPedidos(),
-              Scaffold(
-                drawer: DrawerCustomizado(),
-                appBar: AppBar(
-                  title: Text("Lojas"),
-                ),
-              ),
+              TelaLojas(),
               //Se o usuário for administrador, adicionar novos elementos à lista:
               if (gerenciadorUsuarios.adminHabilitado) ...[
                 TelaUsuarioAdministrador(),

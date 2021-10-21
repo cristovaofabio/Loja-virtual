@@ -25,7 +25,7 @@ class BotaoCustomizado extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         primary: temaPadrao.primaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(40),
         ),
       ),
     );
