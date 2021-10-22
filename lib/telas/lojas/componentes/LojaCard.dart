@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/Loja.dart';
 import 'package:loja_virtual/telas/carrinho/componentes/IconeBotaoCustomizado.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class LojaCard extends StatelessWidget {
   LojaCard(this.store);
@@ -25,23 +26,60 @@ class LojaCard extends StatelessWidget {
       }
     }
 
+    void mostrarMensagemErro() {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Esta função não está disponível neste dispositivo',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Color(0xFFEF5350),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+      ));
+    }
+
     Future<void> openTelefone() async {
       if (await canLaunch('tel:${store.cleanTelefone}')) {
         launch('tel:${store.cleanTelefone}');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            'Esta função não está disponível neste dispositivo',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Color(0xFFEF5350),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-        ));
+        mostrarMensagemErro();
+      }
+    }
+
+    Future<void> openMap() async {
+      try {
+        final availableMaps = await MapLauncher.installedMaps;
+
+        showModalBottomSheet(
+            context: context,
+            builder: (_) {
+              return SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    for (final map in availableMaps)
+                      ListTile(
+                        onTap: () {
+                          map.showMarker(
+                            coords: Coords(
+                                store.endereco.lat!, store.endereco.long!),
+                            title: store.nome,
+                            description: store.enderecoText,
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        title: Text(map.mapName),
+                      )
+                  ],
+                ),
+              );
+            });
+      } catch (e) {
+        mostrarMensagemErro();
       }
     }
 
@@ -117,7 +155,7 @@ class LojaCard extends StatelessWidget {
                     IconeBotaoCustomizado(
                       icone: Icons.map,
                       cor: primaryColor,
-                      onTap: () {},
+                      onTap: openMap,
                     ),
                     IconeBotaoCustomizado(
                       icone: Icons.phone,
