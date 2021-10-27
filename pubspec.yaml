@@ -51,6 +51,10 @@ dependencies:
   flutter_facebook_login: ^3.0.0 #autenticacao com o facebook
   url_launcher: ^6.0.10 #Realizar uma ligação
   map_launcher: ^2.1.1 #mostrar mapa
+  flip_card: ^0.4.4 #rotacionar cartao
+  mask_text_input_formatter: ^2.0.0 #criar a propria mascara
+  credit_card_type_detector: ^2.0.0 #detectar o tipo de cartao de credito
+  keyboard_actions: ^3.4.4 #customizar o teclado
 
 dev_dependencies:
   flutter_test:
