@@ -55,6 +55,7 @@ dependencies:
   mask_text_input_formatter: ^2.0.0 #criar a propria mascara
   credit_card_type_detector: ^2.0.0 #detectar o tipo de cartao de credito
   keyboard_actions: ^3.4.4 #customizar o teclado
+  cloud_functions: ^3.0.5 #usar funcoes do firebase
 
 dev_dependencies:
   flutter_test:
