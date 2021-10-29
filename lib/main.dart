@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_functions/cloud_functions.dart';
+//import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -154,6 +154,9 @@ void main() async {
       ),
     ),
   );
-  final response = await FirebaseFunctions.instance.httpsCallable("helloWorld").call();
-  print(response.data);
+  //final response = await FirebaseFunctions.instance.httpsCallable("getDadosUsuario").call();
+  /* final response = await FirebaseFunctions.instance.httpsCallable("addInformacao").call(
+    {"teste" : "Cristovao"}
+  );
+  print(response.data); */
 }
