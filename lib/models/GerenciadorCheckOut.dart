@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/models/Produto.dart';
@@ -20,7 +21,7 @@ class GerenciadorCheckOut extends ChangeNotifier {
     this.gerenciadorCarrinho = gerenciadorCarrinho;
   }
 
-  Future<void> checkout({Function? onStockFail, Function? onSuccess}) async {
+  Future<void> checkout({required CartaoCreditoModel cartaoCredito, Function? onStockFail, Function? onSuccess}) async {
     carregando = true;
 
     try {

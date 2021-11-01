@@ -2,12 +2,14 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/telas/checkout/componentes/TextoCartao.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class FrenteCartao extends StatelessWidget {
   FrenteCartao(
-      {required this.numberFocus,
+      {required this.cartaoCredito,
+      required this.numberFocus,
       required this.dateFocus,
       required this.nameFocus,
       required this.finished});
@@ -20,6 +22,7 @@ class FrenteCartao extends StatelessWidget {
   final FocusNode numberFocus;
   final FocusNode dateFocus;
   final FocusNode nameFocus;
+  final CartaoCreditoModel cartaoCredito;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,9 @@ class FrenteCartao extends StatelessWidget {
                       dateFocus.requestFocus();
                     },
                     focusNode: numberFocus,
+                    onSaved:(numero){
+                      cartaoCredito.setNumero(numero!);
+                    },
                   ),
                   TextoCartao(
                     titulo: 'Validade',
@@ -69,6 +75,9 @@ class FrenteCartao extends StatelessWidget {
                     },
                     onSubmitted: (_) {
                       nameFocus.requestFocus();
+                    },
+                    onSaved: (validade){
+                      cartaoCredito.setExpirationDate(validade!);
                     },
                     focusNode: dateFocus,
                   ),
@@ -83,6 +92,9 @@ class FrenteCartao extends StatelessWidget {
                     },
                     onSubmitted: (_) {
                       finished();
+                    },
+                    onSaved: (titular){
+                      cartaoCredito.setNome(titular!);
                     },
                     focusNode: nameFocus,
                   ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/telas/checkout/componentes/TextoCartao.dart';
 
 class VersoCartao extends StatelessWidget {
-  VersoCartao({required this.cvvFocus});
+  VersoCartao({required this.cvvFocus, required this.cartaoCredito});
 
   final FocusNode cvvFocus;
+  final CartaoCreditoModel cartaoCredito;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,7 @@ class VersoCartao extends StatelessWidget {
                   child: Container(
                     color: Colors.grey[500],
                     margin: EdgeInsets.only(left: 12),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     child: TextoCartao(
                       hint: '123',
                       maxLength: 3,
@@ -45,6 +46,9 @@ class VersoCartao extends StatelessWidget {
                         return null;
                       },
                       focusNode: cvvFocus,
+                      onSaved: (cvv) {
+                        cartaoCredito.setCVV(cvv!);
+                      },
                     ),
                   ),
                 ),

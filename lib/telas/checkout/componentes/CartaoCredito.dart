@@ -1,10 +1,16 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/telas/checkout/componentes/FrenteCartao.dart';
 import 'package:loja_virtual/telas/checkout/componentes/VersoCartao.dart';
 
 class CartaoCredito extends StatefulWidget {
+
+  final CartaoCreditoModel cartaoCredito;
+  
+  const CartaoCredito(this.cartaoCredito);
+
   @override
   _CartaoCreditoState createState() => _CartaoCreditoState();
 }
@@ -57,6 +63,7 @@ class _CartaoCreditoState extends State<CartaoCredito> {
               speed: 700,
               flipOnTouch: false,
               front: FrenteCartao(
+                cartaoCredito: widget.cartaoCredito,
                 numberFocus: numberFocus,
                 dateFocus: dateFocus,
                 nameFocus: nameFocus,
@@ -66,6 +73,7 @@ class _CartaoCreditoState extends State<CartaoCredito> {
                 },
               ),
               back: VersoCartao(
+                cartaoCredito: widget.cartaoCredito,
                 cvvFocus: cvvFocus,
               ),
             ),

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/comum/PrecoCarrinho.dart';
+import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorCheckOut.dart';
+import 'package:loja_virtual/telas/checkout/componentes/CampoCpf.dart';
 import 'package:loja_virtual/telas/checkout/componentes/CartaoCredito.dart';
 import 'package:provider/provider.dart';
 
 class TelaCheckout extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final CartaoCreditoModel cartaoCredito = CartaoCreditoModel();
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class TelaCheckout extends StatelessWidget {
           centerTitle: true,
         ),
         body: GestureDetector(
-          onTap: (){
+          onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: Consumer<GerenciadorCheckOut>(
@@ -55,22 +58,30 @@ class TelaCheckout extends StatelessWidget {
                   key: formKey,
                   child: ListView(
                     children: <Widget>[
-                      CartaoCredito(),
+                      CartaoCredito(cartaoCredito),
+                      CampoCpf(),
                       PrecoCarrinho(
                         textoBotao: 'Finalizar Pedido',
                         onPressed: () {
-                          if(formKey.currentState!.validate()){
-                          print('enviar');
+                          if (formKey.currentState!.validate()) {
+                            formKey.currentState!.save();
+
+                            print(cartaoCredito);
+
+                            /* gerenciadorCheckOut.checkout(
+                              cartaoCredito: cartaoCredito,
+                              onStockFail: (e) {
+                                Navigator.of(context).popUntil((route) =>
+                                    route.settings.name == '/carrinho');
+                              },
+                              onSuccess: (pedido) {
+                                Navigator.of(context).popUntil(
+                                    (route) => route.settings.name == '/');
+                                Navigator.of(context).pushNamed('/confirmacao',
+                                    arguments: pedido);
+                              },
+                            ); */
                           }
-                          /* gerenciadorCheckOut.checkout(onStockFail: (e) {
-                            Navigator.of(context).popUntil(
-                                (route) => route.settings.name == '/carrinho');
-                          }, onSuccess: (pedido) {
-                            Navigator.of(context).popUntil(
-                                (route) => route.settings.name == '/');
-                            Navigator.of(context)
-                                .pushNamed('/confirmacao', arguments: pedido);
-                          }); */
                         },
                       ),
                     ],
