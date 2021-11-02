@@ -68,7 +68,7 @@ class TelaCheckout extends StatelessWidget {
 
                             print(cartaoCredito);
 
-                            /* gerenciadorCheckOut.checkout(
+                            gerenciadorCheckOut.checkout(
                               cartaoCredito: cartaoCredito,
                               onStockFail: (e) {
                                 Navigator.of(context).popUntil((route) =>
@@ -80,7 +80,7 @@ class TelaCheckout extends StatelessWidget {
                                 Navigator.of(context).pushNamed('/confirmacao',
                                     arguments: pedido);
                               },
-                            ); */
+                            );
                           }
                         },
                       ),

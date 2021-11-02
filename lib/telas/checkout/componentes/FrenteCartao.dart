@@ -22,7 +22,7 @@ class FrenteCartao extends StatelessWidget {
   final FocusNode numberFocus;
   final FocusNode dateFocus;
   final FocusNode nameFocus;
-  final CartaoCreditoModel cartaoCredito;
+  final CartaoCreditoModel cartaoCredito; //cartao criado na tela de checkout e passado para a tela do cartao de crédito
 
   @override
   Widget build(BuildContext context) {

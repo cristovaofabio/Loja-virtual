@@ -7,7 +7,7 @@ import 'package:loja_virtual/telas/checkout/componentes/VersoCartao.dart';
 
 class CartaoCredito extends StatefulWidget {
 
-  final CartaoCreditoModel cartaoCredito;
+  final CartaoCreditoModel cartaoCredito; //cartao criado na tela de checkout
   
   const CartaoCredito(this.cartaoCredito);
 
@@ -63,17 +63,17 @@ class _CartaoCreditoState extends State<CartaoCredito> {
               speed: 700,
               flipOnTouch: false,
               front: FrenteCartao(
-                cartaoCredito: widget.cartaoCredito,
+                cartaoCredito: widget.cartaoCredito, //cartao criado na tela de checkout
                 numberFocus: numberFocus,
                 dateFocus: dateFocus,
                 nameFocus: nameFocus,
                 finished: () {
-                  cardKey.currentState!.toggleCard();
+                  cardKey.currentState!.toggleCard(); //utilizado para rotacionar o cartao
                   cvvFocus.requestFocus();
                 },
               ),
               back: VersoCartao(
-                cartaoCredito: widget.cartaoCredito,
+                cartaoCredito: widget.cartaoCredito, //cartao criado na tela de checkout
                 cvvFocus: cvvFocus,
               ),
             ),

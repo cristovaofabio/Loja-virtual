@@ -7,7 +7,7 @@ class VersoCartao extends StatelessWidget {
   VersoCartao({required this.cvvFocus, required this.cartaoCredito});
 
   final FocusNode cvvFocus;
-  final CartaoCreditoModel cartaoCredito;
+  final CartaoCreditoModel cartaoCredito; //cartao criado na tela de checkout e passado para a tela do cartao de crédito
 
   @override
   Widget build(BuildContext context) {

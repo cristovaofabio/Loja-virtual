@@ -12,7 +12,18 @@ class CartaoCreditoModel {
   void setCVV(String cvv) => securityCode = cvv;
   void setNumero(String numero) {
     this.numero = numero;
-    marca = detectCCType(numero.replaceAll(' ', '')).toString();
+    marca = detectCCType(numero.replaceAll(' ', '')).toString().toUpperCase().split(".").last;
+    /* Exemplo: converte CreditCardType.mastercard para isso MASTERCARD*/
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cardNumber': numero.replaceAll(' ', ''),
+      'holder': nomeTitular,
+      'expirationDate': expirationDate,
+      'securityCode': securityCode,
+      'brand': marca,
+    };
   }
 
   @override

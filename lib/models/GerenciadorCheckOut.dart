@@ -4,10 +4,12 @@ import 'package:loja_virtual/models/CartaoCredito.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/Pedido.dart';
 import 'package:loja_virtual/models/Produto.dart';
+import 'package:loja_virtual/servicos/CieloPagamento.dart';
 
 class GerenciadorCheckOut extends ChangeNotifier {
   GerenciadorCarrinho? gerenciadorCarrinho;
   final FirebaseFirestore bancoDados = FirebaseFirestore.instance;
+  final CieloPagamento cieloPagamento = CieloPagamento();
 
   bool _carregando = false;
   bool get carregando => _carregando;
@@ -21,10 +23,21 @@ class GerenciadorCheckOut extends ChangeNotifier {
     this.gerenciadorCarrinho = gerenciadorCarrinho;
   }
 
-  Future<void> checkout({required CartaoCreditoModel cartaoCredito, Function? onStockFail, Function? onSuccess}) async {
+  Future<void> checkout({
+    required CartaoCreditoModel cartaoCredito,
+    Function? onStockFail,
+    Function? onSuccess,
+  }) async {
     carregando = true;
+    final orderId = await _getOrderId();
 
-    try {
+    await cieloPagamento.autorizar(
+        creditCard: cartaoCredito,
+        price: gerenciadorCarrinho!.precoTotal,
+        orderId: orderId.toString(),
+        user: gerenciadorCarrinho!.usuario!);
+
+    /* try {
       await _decrementarEstoque();
     } catch (erro) {
       onStockFail!(erro);
@@ -32,15 +45,14 @@ class GerenciadorCheckOut extends ChangeNotifier {
       return;
     }
 
-    final orderId = await _getOrderId();
     final order = Pedido.fromCartManager(gerenciadorCarrinho!);
     order.orderId = orderId.toString();
 
     await order.salvar();
 
-    gerenciadorCarrinho!.limpar();
+    gerenciadorCarrinho!.limpar(); */
 
-    onSuccess!(order);
+    //onSuccess!(order);
     carregando = false;
   }
 
