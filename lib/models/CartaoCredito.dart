@@ -1,11 +1,11 @@
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 
 class CartaoCreditoModel {
-  late String numero;
-  late String nomeTitular;
-  late String expirationDate;
-  late String securityCode;
-  late String marca;
+  String numero="";
+  String nomeTitular="";
+  String expirationDate="";
+  String securityCode="";
+  String marca="";
 
   void setNome(String nome) => nomeTitular = nome;
   void setExpirationDate(String date) => expirationDate = date;

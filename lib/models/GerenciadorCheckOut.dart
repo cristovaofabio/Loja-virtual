@@ -27,17 +27,26 @@ class GerenciadorCheckOut extends ChangeNotifier {
     required CartaoCreditoModel cartaoCredito,
     Function? onStockFail,
     Function? onSuccess,
+    Function? onPayFail,
   }) async {
     carregando = true;
     final orderId = await _getOrderId();
 
-    await cieloPagamento.autorizar(
-        creditCard: cartaoCredito,
-        price: gerenciadorCarrinho!.precoTotal,
-        orderId: orderId.toString(),
-        user: gerenciadorCarrinho!.usuario!);
+    try {
+      String payId = await cieloPagamento.autorizar(
+          creditCard: cartaoCredito,
+          price: gerenciadorCarrinho!.precoTotal,
+          orderId: orderId.toString(),
+          user: gerenciadorCarrinho!.usuario!);
 
-    /* try {
+      debugPrint('success $payId');
+    } catch (erro) {
+      onPayFail!(erro);
+      carregando = false;
+      return;
+    }
+
+    try {
       await _decrementarEstoque();
     } catch (erro) {
       onStockFail!(erro);
@@ -50,9 +59,9 @@ class GerenciadorCheckOut extends ChangeNotifier {
 
     await order.salvar();
 
-    gerenciadorCarrinho!.limpar(); */
+    gerenciadorCarrinho!.limpar();
 
-    //onSuccess!(order);
+    onSuccess!(order);
     carregando = false;
   }
 

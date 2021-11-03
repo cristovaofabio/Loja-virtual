@@ -5,6 +5,7 @@ import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
 import 'package:loja_virtual/models/GerenciadorCheckOut.dart';
 import 'package:loja_virtual/telas/checkout/componentes/CampoCpf.dart';
 import 'package:loja_virtual/telas/checkout/componentes/CartaoCredito.dart';
+import 'package:loja_virtual/util/MensagemConfirmacao.dart';
 import 'package:provider/provider.dart';
 
 class TelaCheckout extends StatelessWidget {
@@ -73,6 +74,15 @@ class TelaCheckout extends StatelessWidget {
                               onStockFail: (e) {
                                 Navigator.of(context).popUntil((route) =>
                                     route.settings.name == '/carrinho');
+                              },
+                              onPayFail: (erro) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  mensagemConfirmacao(
+                                    '$erro',
+                                    Color(0xFFEF5350),
+                                    Icons.mood_bad_sharp,
+                                  ),
+                                );
                               },
                               onSuccess: (pedido) {
                                 Navigator.of(context).popUntil(

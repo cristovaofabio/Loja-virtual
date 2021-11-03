@@ -34,6 +34,7 @@ class VersoCartao extends StatelessWidget {
                     margin: EdgeInsets.only(left: 12),
                     padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     child: TextoCartao(
+                      initialValue: cartaoCredito.securityCode,
                       hint: '123',
                       maxLength: 3,
                       inputFormatters: [

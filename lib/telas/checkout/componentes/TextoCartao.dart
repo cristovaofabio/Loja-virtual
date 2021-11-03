@@ -14,6 +14,7 @@ class TextoCartao extends StatelessWidget {
     required this.focusNode,
     this.onSaved,
     this.onSubmitted,
+    this.initialValue="",
   }) : textInputAction =
             onSubmitted == null ? TextInputAction.done : TextInputAction.next;
 
@@ -29,11 +30,12 @@ class TextoCartao extends StatelessWidget {
   final Function(String)? onSubmitted;
   final TextInputAction textInputAction;
   final FormFieldSetter<String>? onSaved;
+  final String initialValue;
 
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
-      initialValue: '',
+      initialValue: initialValue,
       validator: validator,
       onSaved: onSaved,
       builder: (state) {
@@ -64,6 +66,7 @@ class TextoCartao extends StatelessWidget {
                   ],
                 ),
               TextFormField(
+                initialValue: initialValue,
                 style: TextStyle(
                   color: titulo == null && state.hasError
                       ? Colors.red

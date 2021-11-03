@@ -41,6 +41,7 @@ class FrenteCartao extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextoCartao(
+                    initialValue: cartaoCredito.numero,
                     titulo: 'Número',
                     hint: '0000 0000 0000 0000',
                     textInputType: TextInputType.number,
@@ -65,6 +66,7 @@ class FrenteCartao extends StatelessWidget {
                     },
                   ),
                   TextoCartao(
+                    initialValue: cartaoCredito.expirationDate,
                     titulo: 'Validade',
                     hint: '11/2027',
                     textInputType: TextInputType.number,
@@ -82,6 +84,7 @@ class FrenteCartao extends StatelessWidget {
                     focusNode: dateFocus,
                   ),
                   TextoCartao(
+                    initialValue: cartaoCredito.nomeTitular,
                     titulo: 'Titular',
                     hint: 'João da Silva',
                     textInputType: TextInputType.text,
