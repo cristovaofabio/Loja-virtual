@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:loja_virtual/models/Carrinho.dart';
 import 'package:loja_virtual/models/Endereco.dart';
 import 'package:loja_virtual/models/GerenciadorCarrinho.dart';
+import 'package:loja_virtual/servicos/CieloPagamento.dart';
 
 enum Status { cancelado, preparando, transportando, entregue }
 
@@ -54,7 +56,7 @@ class Pedido {
     endereco = Endereco.fromMap(doc['endereco'] as Map<String, dynamic>);
     date = doc['date'] as Timestamp;
     status = Status.values[doc['status'] as int];
-    
+
     Map<String, dynamic> dataMap = doc.data() as Map<String, dynamic>;
 
     if (dataMap.containsKey('payId')) {
@@ -101,9 +103,15 @@ class Pedido {
         : () {};
   }
 
-  void cancelar() {
-    status = Status.cancelado;
-    firestoreRef.update({'status': status.index});
+  Future<void> cancelar() async {
+    try {
+      await CieloPagamento().cancelamento(payId!);
+      status = Status.cancelado;
+      firestoreRef.update({'status': status.index});
+    } catch (e) {
+      debugPrint('Erro ao cancelar');
+      return Future.error('Falha ao cancelar');
+    }
   }
 
   @override

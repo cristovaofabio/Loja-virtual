@@ -68,6 +68,7 @@ class ItemPedido extends StatelessWidget {
                     onPressed: () {
                       showDialog(
                           context: context,
+                          barrierDismissible: false, //não pode fechar o dialog clicando fora dele
                           builder: (_) => CancelarPedidoAlert(pedido));
                     },
                     child: Text(

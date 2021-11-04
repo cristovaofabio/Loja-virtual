@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions"; //para criar funcoes e gatilhos
 import * as admin from 'firebase-admin'; //para acessar dados do firestore
-import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands, CaptureRequestModel} from 'cielo';
+import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands, CaptureRequestModel, CancelTransactionRequestModel } from 'cielo';
 
 admin.initializeApp(functions.config().firebase);
 
@@ -236,6 +236,60 @@ export const capturarCartaoCredito = functions.https.onCall(async (data, context
 
 });
 
+export const cancelarCompraCartaoCredito = functions.https.onCall(async (data, context) => {
+  if (data === null) {
+    return {
+      "success": false,
+      "error": {
+        "code": -1,
+        "message": "Dados não informados"
+      }
+    };
+  }
+  if (!context.auth) {
+    return {
+      "success": false,
+      "error": {
+        "code": -1,
+        "message": "Nenhum usuário logado"
+      }
+    };
+  }
+
+  const cancelParams: CancelTransactionRequestModel = {
+    paymentId: data.payId,
+  }
+
+  try {
+    const cancel = await cielo.creditCard.cancelTransaction(cancelParams);
+
+    if (cancel.status === 10 || cancel.status === 11) {
+      return { 
+        "success": true, 
+        "message":"Cancelamento realizado com sucesso!"
+      };
+    } else {
+      return {
+        "success": false,
+        "status": cancel.status,
+        "error": {
+          "code": cancel.returnCode,
+          "message": cancel.returnMessage,
+        }
+      };
+    }
+  } catch (error) {
+    console.log("Error ", error);
+    return {
+      "success": false,
+      "error": {
+        "code": error,
+        "message": (error as Error).message
+      }
+    };
+  }
+
+});
 
 export const helloWorld = functions.https.onCall((data, context) => {
   functions.logger.info("Hello logs!", { structuredData: true });
