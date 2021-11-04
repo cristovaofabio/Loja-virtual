@@ -7,6 +7,7 @@ enum Status { cancelado, preparando, transportando, entregue }
 
 class Pedido {
   String? orderId;
+  String? payId;
   List<Carrinho>? itens;
   num? preco;
   String? userId;
@@ -53,14 +54,20 @@ class Pedido {
     endereco = Endereco.fromMap(doc['endereco'] as Map<String, dynamic>);
     date = doc['date'] as Timestamp;
     status = Status.values[doc['status'] as int];
+    
+    Map<String, dynamic> dataMap = doc.data() as Map<String, dynamic>;
+
+    if (dataMap.containsKey('payId')) {
+      payId = doc['payId'] as String;
+    }
   }
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   DocumentReference get firestoreRef =>
-    firestore.collection('orders').doc(orderId);
+      firestore.collection('orders').doc(orderId);
 
-  void updateFromDocument(DocumentSnapshot doc){
+  void updateFromDocument(DocumentSnapshot doc) {
     status = Status.values[doc['status'] as int];
   }
 
@@ -72,6 +79,7 @@ class Pedido {
       'endereco': endereco!.toMap(),
       'status': status.index,
       'date': Timestamp.now(),
+      'payId': payId,
     });
   }
 
@@ -93,7 +101,7 @@ class Pedido {
         : () {};
   }
 
-  void cancelar(){
+  void cancelar() {
     status = Status.cancelado;
     firestoreRef.update({'status': status.index});
   }

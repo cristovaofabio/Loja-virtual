@@ -32,8 +32,12 @@ class GerenciadorCheckOut extends ChangeNotifier {
     carregando = true;
     final orderId = await _getOrderId();
 
+    //esse payId poderá ser utilizado futuramente para cancelar o pedido e devolver o dinheiro ao cliente
+    late String payId;
+
+    //verificar se o cartao pode ser utilizado para realizar pagamentos:
     try {
-      String payId = await cieloPagamento.autorizar(
+      payId = await cieloPagamento.autorizar(
           creditCard: cartaoCredito,
           price: gerenciadorCarrinho!.precoTotal,
           orderId: orderId.toString(),
@@ -43,24 +47,38 @@ class GerenciadorCheckOut extends ChangeNotifier {
     } catch (erro) {
       onPayFail!(erro);
       carregando = false;
-      return;
+      return; //sair da funcao
     }
 
+    //diminuir o estoque:
     try {
       await _decrementarEstoque();
     } catch (erro) {
       onStockFail!(erro);
       carregando = false;
-      return;
+      return; //sair da funcao
+    }
+
+    //capturar o pagamento:
+    try {
+      await cieloPagamento.capture(payId).then((_){
+        print("A captura foi um sucesso!");
+        print("payId: "+payId);
+      });
+
+    } catch (e){
+      onPayFail!(e);
+      carregando = false;
+      return; //sair da funcao
     }
 
     final order = Pedido.fromCartManager(gerenciadorCarrinho!);
     order.orderId = orderId.toString();
+    order.payId = payId;
 
     await order.salvar();
 
     gerenciadorCarrinho!.limpar();
-
     onSuccess!(order);
     carregando = false;
   }

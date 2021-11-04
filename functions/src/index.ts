@@ -1,23 +1,26 @@
-import * as functions from "firebase-functions";
-import * as admin from 'firebase-admin';
-import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands } from 'cielo';
+import * as functions from "firebase-functions"; //para criar funcoes e gatilhos
+import * as admin from 'firebase-admin'; //para acessar dados do firestore
+import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands, CaptureRequestModel} from 'cielo';
 
 admin.initializeApp(functions.config().firebase);
 
+//valores criados previamente no cloud firestore:
 const merchantId = functions.config().cielo.marchantid;
 const merchantKey = functions.config().cielo.marchantkey;
 
+//parametros de criacao. equivalente ao header em cURL
 const cieloParametros: CieloConstructor = {
   merchantId: merchantId,
   merchantKey: merchantKey,
   sandbox: true, //ambiente de teste
-  debug: true, //qualquer mensagem enviada para a cielo será mostrada. Depois mudar para false!
+  debug: true, //qualquer mensagem enviada para a cielo será mostrada. depois mudar para false!
 }
 
 const cielo = new Cielo(cieloParametros);
 
 //onCall significa que essa funcao será acessada diretamente do app:
 export const autorizarCartaoCredito = functions.https.onCall(async (data, context) => {
+  //verificar se os dados necessarios para realizar a transacao foram coletados e enviados pelo app para esta funcao:
   if (data === null) {
     return {
       "success": false,
@@ -27,6 +30,7 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
       }
     };
   }
+  //verificar se existe algum usuario autenticado:
   if (!context.auth) {
     return {
       "success": false,
@@ -37,12 +41,9 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
     };
   }
 
-  const userId = context.auth.uid;
-  const snapshot = await admin.firestore().collection("usuarios").doc(userId).get();
-  const dadosUsuario = snapshot.data() || {};
-
   console.log("Iniciando Autorização");
 
+  //variavel brand do tipo EnumBrands
   let brand: EnumBrands;
   switch (data.creditCard.brand) {
     case "VISA":
@@ -78,11 +79,17 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
         }
       };
   }
+
+  const usuarioId = context.auth.uid;
+  const snapshot = await admin.firestore().collection("usuarios").doc(usuarioId).get();
+  const dadosUsuario = snapshot.data() || {};
+
+  //equivalente ao body em cURL para uma transacao completa. apenas alguns dados abaixo sao obrigatorios
   const saleData: TransactionCreditCardRequestModel = {
-    merchantOrderId: data.merchantOrderId,
+    merchantOrderId: data.merchantOrderId, //identificador do pedido, coletado e informado pelo app.
     customer: {
       name: dadosUsuario.nome,
-      identity: data.cpf,
+      identity: data.cpf, //cpf do comprador, coletado e informado pelo app.
       identityType: 'CPF',
       email: dadosUsuario.email,
       deliveryAddress: {
@@ -99,9 +106,9 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
     payment: {
       currency: 'BRL',
       country: 'BRA',
-      amount: data.amount,
+      amount: data.amount, //valor a ser pago, coletado e informado pelo app
       installments: data.installments,
-      softDescriptor: data.softDescriptor.substring(0, 13),
+      softDescriptor: data.softDescriptor.substring(0, 13), //utilizar apenas os 13 primeiros carateres
       type: data.paymentType,
       capture: false,
       creditCard: {
@@ -113,11 +120,14 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
       }
     }
   }
-  try {
-    const transaction = await cielo.creditCard.transaction(saleData);
 
+
+  try {
+    //equivale a realizar um post em cURL. a resposta deste post sera armazenada na constate transacition
+    const transaction = await cielo.creditCard.transaction(saleData);
+    //de acordo com a documentacao da cielo, a resposta contem a variavel status
     if (transaction.payment.status === 1) {
-      //autorização realizada com sucesso
+      //status igual a 1 significa que o pagamento foi autorizado com sucesso!
 
       return {
         "success": true,
@@ -125,8 +135,8 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
       }
     } else {
       //ocorreu algum erro na autorização
-      
       let message = '';
+      //de acordo com a documentacao da cielo, a resposta contem a variavel returnCode
       switch (transaction.payment.returnCode) {
         case '5':
           message = 'Não Autorizada';
@@ -171,6 +181,61 @@ export const autorizarCartaoCredito = functions.https.onCall(async (data, contex
   }
 
 });
+
+//esta funcao serve para que a cobrança da compra seja efetivada ao portador do cartão.
+//de acordo com a documentacao da cielo, a cobrança poderá ser realizada em até 5 dias após a data da autorização.
+export const capturarCartaoCredito = functions.https.onCall(async (data, context) => {
+  if (data === null) {
+    return {
+      "success": false,
+      "error": {
+        "code": -1,
+        "message": "Dados não informados"
+      }
+    };
+  }
+  if (!context.auth) {
+    return {
+      "success": false,
+      "error": {
+        "code": -1,
+        "message": "Nenhum usuário logado"
+      }
+    };
+  }
+
+  const captureParams: CaptureRequestModel = {
+    paymentId: data.payId,
+  }
+
+  try {
+    const capture = await cielo.creditCard.captureSaleTransaction(captureParams);
+
+    if (capture.status === 2) {
+      return { "success": true };
+    } else {
+      return {
+        "success": false,
+        "status": capture.status,
+        "error": {
+          "code": capture.returnCode,
+          "message": capture.returnMessage,
+        }
+      };
+    }
+  } catch (error) {
+    console.log("Error ", error);
+    return {
+      "success": false,
+      "error": {
+        "code": error,
+        "message": (error as Error).message
+      }
+    };
+  }
+
+});
+
 
 export const helloWorld = functions.https.onCall((data, context) => {
   functions.logger.info("Hello logs!", { structuredData: true });
