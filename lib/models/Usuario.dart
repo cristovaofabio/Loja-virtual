@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:loja_virtual/models/Endereco.dart';
 
 class Usuario {
@@ -45,7 +48,7 @@ class Usuario {
     salvarDados();
   }
 
-  void setCpf(String cpf){
+  void setCpf(String cpf) {
     this.cpf = cpf;
     salvarDados();
   }
@@ -55,7 +58,21 @@ class Usuario {
       .doc(this.idUsuario)
       .collection('carrinho');
 
+  CollectionReference get tokensReference => bancoDados
+      .collection("usuarios")
+      .doc(this.idUsuario)
+      .collection('tokens');
+
   Future<void> salvarDados() async {
     await bancoDados.collection("usuarios").doc(this.idUsuario).set(toMap());
+  }
+
+  Future<void> salvarToken() async {
+    final token = await FirebaseMessaging.instance.getToken();
+    await tokensReference.doc(token).set({
+      'token': token,
+      'ultimaAtualizacao': FieldValue.serverTimestamp(), //time do servidor
+      'plataforma': Platform.operatingSystem,
+    });
   }
 }

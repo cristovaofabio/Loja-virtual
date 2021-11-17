@@ -56,6 +56,7 @@ dependencies:
   credit_card_type_detector: ^2.0.0 #detectar o tipo de cartao de credito
   keyboard_actions: ^3.4.4 #customizar o teclado
   cloud_functions: ^3.0.5 #usar funcoes do firebase
+  firebase_messaging: ^11.1.0 #enviar notificações
 
 dev_dependencies:
   flutter_test:

@@ -74,6 +74,8 @@ class GerenciadorUsuarios extends ChangeNotifier {
 
           await usuarioAtual.salvarDados();
 
+          usuarioAtual.salvarToken();
+
           onSuccess!();
         }
         break;
@@ -109,6 +111,8 @@ class GerenciadorUsuarios extends ChangeNotifier {
       await usuario.salvarDados();
       this.usuarioAtual = usuario;
 
+      usuarioAtual.salvarToken();
+
       sucesso();
     } on FirebaseAuthException catch (erro) {
       fracasso(getErrorString(erro.code));
@@ -134,6 +138,8 @@ class GerenciadorUsuarios extends ChangeNotifier {
           await bancoDados.collection("usuarios").doc(usuario.uid).get();
 
       usuarioAtual = Usuario.fromDocumentSnapshot(documento);
+
+      usuarioAtual.salvarToken();
 
       final docAdmin = await bancoDados
           .collection('administradores')
