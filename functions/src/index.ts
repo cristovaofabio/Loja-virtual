@@ -264,9 +264,9 @@ export const cancelarCompraCartaoCredito = functions.https.onCall(async (data, c
     const cancel = await cielo.creditCard.cancelTransaction(cancelParams);
 
     if (cancel.status === 10 || cancel.status === 11) {
-      return { 
-        "success": true, 
-        "message":"Cancelamento realizado com sucesso!"
+      return {
+        "success": true,
+        "message": "Cancelamento realizado com sucesso!"
       };
     } else {
       return {
@@ -316,7 +316,71 @@ export const addInformacao = functions.https.onCall(async (data, context) => {
   return { "sucesso": snapshot.id };
 });
 
-export const onNovoPedido = functions.firestore.document("/orders/{idPedido}").onCreate((snapshot, context) => {
-  const idPedido = context.params.idPedido;
-  console.log(idPedido);
+//exemplo de um gatilho de criacao:
+export const onNovoPedido = functions.firestore.document("/orders/{idPedido}").onCreate(async (snapshot, context) => {
+  const idPedido = context.params.idPedido; //pegar o id do pedido que acabou se criado
+  const querySnapshot = await admin.firestore().collection("administradores").get(); //pegar todos os admins do app
+
+  //uma lista com o id de todos os documentos coletados anteriormente, ou seja, o id de todos os admins:
+  const admins = querySnapshot.docs.map(doc => doc.id);
+
+  let adminsTokens: string[] = []; //armazenar todos os tokens de todos os admins
+  for (let i = 0; i < admins.length; i++) {
+    const tokensAdmin: string[] = await getDeviceTokens(admins[i]); //pegar todos os tokens do administrador
+    adminsTokens = adminsTokens.concat(tokensAdmin);
+  }
+
+  //enviando uma notificacao para o tokens dos administradores:
+  await sendPushFCM(
+    adminsTokens, //tokens de todos os administradores
+    'Novo Pedido', //titulo da mensagem
+    'Nova venda realizada. Pedido: ' + idPedido //mensagem a ser enviada
+  );
 });
+
+const orderStatus = new Map([
+  [0, "Cancelado"],
+  [1, "Em Preparação"],
+  [2, "Em Transporte"],
+  [3, "Entregue"]
+])
+
+//exemplo de um gatilho de atualizacao:
+export const onOrderStatusChanged = functions.firestore.document("/orders/{idPedido}").onUpdate(async (snapshot, context) => {
+  //a variavel status ja existe dentro do documento
+  const beforeStatus = snapshot.before.data().status;
+  const afterStatus = snapshot.after.data().status;
+
+  if (beforeStatus !== afterStatus) {
+    const tokensUser = await getDeviceTokens(snapshot.after.data().usuario)
+
+    await sendPushFCM(
+      tokensUser,
+      'Pedido: ' + context.params.idPedido,
+      'Status atualizado para: ' + orderStatus.get(afterStatus),
+    )
+  }
+});
+
+async function getDeviceTokens(uid: string) {
+  const querySnapshot = await admin.firestore().collection("usuarios").doc(uid).collection("tokens").get();
+  const tokens = querySnapshot.docs.map(doc => doc.id);
+
+  return tokens;
+}
+
+async function sendPushFCM(tokens: string[], title: string, message: string) {
+  if (tokens.length > 0) {
+    //conteudo da mensagem:
+    const payload = {
+      notification: {
+        title: title,
+        body: message,
+        click_action: 'FLUTTER_NOTIFICATION_CLICK'
+      }
+    };
+    //enviar mensagem para os dispositivos
+    return admin.messaging().sendToDevice(tokens, payload);
+  }
+  return;
+}
