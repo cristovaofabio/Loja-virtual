@@ -54,6 +54,7 @@ class GerenciadorCheckOut extends ChangeNotifier {
     try {
       await _decrementarEstoque();
     } catch (erro) {
+      cieloPagamento.cancelamento(payId); //cancelar o pagamento caso ocorra algum erro!
       onStockFail!(erro);
       carregando = false;
       return; //sair da funcao

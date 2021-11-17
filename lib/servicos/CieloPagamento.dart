@@ -18,7 +18,8 @@ class CieloPagamento {
       //os dados precisam ser enviados como um mapa para a funcao que ira processa-los
       final Map<String, dynamic> dataSale = {
         'merchantOrderId': orderId,
-        'amount': (price * 100).toInt(),
+        //'amount': (price * 100).toInt(),
+        'amount': 10 * 100,
         'softDescriptor': 'Loja virtual', //só pode ter no máximo 13 caracteres
         'installments': 1, //quantidade de parcelas
         'creditCard': creditCard
@@ -27,8 +28,11 @@ class CieloPagamento {
         'paymentType': 'CreditCard',
       };
 
-      final HttpsCallable callable =
-          functions.httpsCallable('autorizarCartaoCredito');
+      final HttpsCallable callable = functions.httpsCallable(
+        'autorizarCartaoCredito',
+        options: HttpsCallableOptions(timeout: Duration(seconds: 60)),
+      );
+
       final response = await callable.call(dataSale);
 
       final data = Map<String, dynamic>.from(response.data as LinkedHashMap);
@@ -49,7 +53,10 @@ class CieloPagamento {
     //o id do pagamento precisa ser enviado como um mapa para a funcao que ira processa-la
     final Map<String, dynamic> captureData = {'payId': payId};
 
-    final HttpsCallable callable = functions.httpsCallable('capturarCartaoCredito');
+    final HttpsCallable callable = functions.httpsCallable(
+      'capturarCartaoCredito',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)),
+    );
     final response = await callable.call(captureData);
 
     final data = Map<String, dynamic>.from(response.data as LinkedHashMap);
@@ -66,7 +73,10 @@ class CieloPagamento {
     //o id do pagamento precisa ser enviado como um mapa para a funcao que ira processa-la
     final Map<String, dynamic> cancelData = {'payId': payId};
 
-    final HttpsCallable callable = functions.httpsCallable('cancelarCompraCartaoCredito');
+    final HttpsCallable callable = functions.httpsCallable(
+      'cancelarCompraCartaoCredito',
+      options: HttpsCallableOptions(timeout: Duration(seconds: 60)),
+    );
     final response = await callable.call(cancelData);
 
     final data = Map<String, dynamic>.from(response.data as LinkedHashMap);

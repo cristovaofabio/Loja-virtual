@@ -5,15 +5,15 @@ import { CieloConstructor, Cielo, TransactionCreditCardRequestModel, EnumBrands,
 admin.initializeApp(functions.config().firebase);
 
 //valores criados previamente no cloud firestore:
-const merchantId = functions.config().cielo.marchantid;
-const merchantKey = functions.config().cielo.marchantkey;
+const merchantId = functions.config().cielo.merchantid;
+const merchantKey = functions.config().cielo.merchantkey;
 
 //parametros de criacao. equivalente ao header em cURL
 const cieloParametros: CieloConstructor = {
   merchantId: merchantId,
   merchantKey: merchantKey,
-  sandbox: true, //ambiente de teste
-  debug: true, //qualquer mensagem enviada para a cielo será mostrada. depois mudar para false!
+  sandbox: false, //ambiente de teste
+  debug: false, //se true, qualquer mensagem enviada para a cielo será mostrada. depois mudar para false!
 }
 
 const cielo = new Cielo(cieloParametros);
