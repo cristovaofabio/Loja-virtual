@@ -1,6 +1,5 @@
 import 'dart:io';
 
-//import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +100,7 @@ void main() async {
       ],
       child: MaterialApp(
         theme: temaPadrao,
-        title: 'Loja do Cristóvão',
+        title: 'Loja Virtual',
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case '/confirmacao':
@@ -154,9 +153,4 @@ void main() async {
       ),
     ),
   );
-  //final response = await FirebaseFunctions.instance.httpsCallable("getDadosUsuario").call();
-  /* final response = await FirebaseFunctions.instance.httpsCallable("addInformacao").call(
-    {"teste" : "Cristovao"}
-  );
-  print(response.data); */
 }

@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
                 elevation: 0,
                 backgroundColor: Colors.transparent,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Loja do Cristóvão'),
+                  title: Text('Loja virtual'),
                   centerTitle: true,
                 ),
                 actions: <Widget>[
