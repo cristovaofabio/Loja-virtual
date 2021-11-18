@@ -21,6 +21,7 @@ SnackBar mensagemConfirmacao(String texto, Color cor, IconData icon) {
     ),
     behavior: SnackBarBehavior.floating,
     backgroundColor: cor,
+    duration: Duration(seconds: 3),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20.0),
     ),

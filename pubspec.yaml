@@ -57,6 +57,7 @@ dependencies:
   keyboard_actions: ^3.4.4 #customizar o teclado
   cloud_functions: ^3.0.5 #usar funcoes do firebase
   firebase_messaging: ^11.1.0 #enviar notificações
+  another_flushbar: ^1.10.25 #notificações personalizadas
 
 dev_dependencies:
   flutter_test:
