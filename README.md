@@ -1,28 +1,28 @@
-# Projeto flutter: Loja virtual
+# Flutter project: Online store
 
-## Recursos:
+## Resources:
 - Google cloud functions;
-- Autenticação com e-mail e senha;
-- Armazenamento de dados na nuvem - [Firebase]( https://firebase.google.com/);
-- Gerenciador de estado: [Provider](https://medium.com/codechai/provider-state-management-in-flutter-d453e73537c5)
+- Authentication with email and password;
+- Cloud data storage - [Firebase]( https://firebase.google.com/);
+- State Manager: [Provider](https://medium.com/codechai/provider-state-management-in-flutter-d453e73537c5)
 .
 
-### Modo Administrador:
-- Adicionar, remover e editar produtos do app;
-- Visualizar todos os usuários cadastrados no app;
-- Visualizar todos os pedidos de produtos realizados pelo aplicativo;
-- Mudar o status do pedido (em transporte, em preparação, cancelado e entregue);
+### Administrator Mode:
+- Add, remove and edit products from the app;
+- View all registered users in the app;
+- View all product orders made by the application;
+- Change order status (in transport, in preparation, canceled and delivered);
 
-### Modo cliente:
-- Pesquisar e adicionar produtos ao carrinho de compras;
-- Remover produtos do carrinho de compras;
-- Realizar pagamento com cartão de crédito;
-- Consultar frete de entrega dos produtos;
-- Visualizar em algum mapa o endereço das lojas previamente cadastradas;
-- Realizar ligação para alguma loja previamente cadastrada.
+### Client Mode:
+- Search and add products to the shopping cart;
+- Remove products from the shopping cart;
+- Make payment by credit card;
+- Consult freight delivery of products;
+- View the addresses of previously registered stores on a map;
+- Make a call to a previously registered store.
 
 
-## Algumas telas do app:
+## Some screens in the app:
 
 <div align="center">
   <img src="https://user-images.githubusercontent.com/19698296/142518912-e163df76-5deb-41e0-8c1e-7e39cf91ba38.jpg" width="300px" />
