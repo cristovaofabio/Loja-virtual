@@ -4,7 +4,7 @@
 - Google cloud functions;
 - Authentication with email and password;
 - Cloud data storage - [Firebase]( https://firebase.google.com/);
-- State Manager: [Provider](https://medium.com/codechai/provider-state-management-in-flutter-d453e73537c5)
+- State Management: [Provider](https://medium.com/codechai/provider-state-management-in-flutter-d453e73537c5)
 .
 
 ### Administrator Mode:
